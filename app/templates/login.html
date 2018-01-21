@@ -1,0 +1,103 @@
+<html>
+
+<head>
+  <script src="/static/js/jquery-1.9.1.min.js"></script>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+<!--             <div class="form-inline form-group">
+                <label for="inputpwd" class="col-sm-2 control-label">pwd</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputpwd" placeholder="pwd">
+                </div>
+            </div> -->
+            <div class='col-6'>
+                <h1>Src Config</h1>
+<form role="form" action="/api/form" method="post">
+                    <div class="src form-group">
+                        <label>数据库名称</label>
+                        <input class="con-name form-control" type="text" list="itemlist" placeholder="Connection name">
+                        <datalist id="itemlist">
+                        </datalist>
+                        <label>数据库驱动名称</label>
+                        <input class="driver-name form-control" name="srcdriver" type="text" placeholder="Driver name">
+                        <label>数据库配置</label>
+                        <input class="dsn-config form-control" name="srcdsn" type="text" placeholder="DSN config">
+                        <button class="test-button form-control" type="button">test</button>
+                    </div>
+            </div>
+            <div class='col-6'>
+                <h1>Dst Config</h1>
+                <div class="dst form-group">
+                    <label>数据库名称</label>
+                    <input class="con-name form-control" type="text" list="itemlist" placeholder="Connection name">
+                    <datalist id="itemlist">
+                    </datalist>
+                    <label>数据库驱动名称</label>
+                    <input class="driver-name form-control" name="dstdriver" type="text" placeholder="Driver name">
+                    <label>数据库配置</label>
+                    <input class="dsn-config form-control" name="dstdsn" type="text" placeholder="DSN config">
+                    <button class="test-button form-control" type="button">test</button>
+                </div>
+            </div>
+            <div class='col-12'>
+                <button class="form-control">确定</button>
+            </div>
+</form>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+
+    $(function () {
+        $.ajax({
+            url: "/api/db_history",
+            type: "GET",
+            success: function (msg) {
+                var htmlContent = '';
+                for (var i of msg) {
+                    htmlContent = htmlContent + '<option>' + i.name + "</option>";
+                }
+                $("#itemlist").html(htmlContent);
+            }
+        });
+        $('.con-name').change(function () {
+            var name = $(this).val();
+            var parent = $(this).parent();
+            $.ajax({
+                url: "/api/db_history",
+                type: "POST",
+                data: {name: name},
+                success: function (msg) {
+                    parent.find(".driver-name").val(msg.driver);
+                    parent.find(".dsn-config").val(msg.dsn);
+                }
+            });
+        });
+        $('.test-button').click(function () {
+            var parent = $(this).parent();
+            var name = parent.find(".con-name").val();
+            var driver = parent.find(".driver-name").val();
+            var dsn = parent.find(".dsn-config").val();
+            var data = {name: name, driver: driver, dsn:dsn};
+            $.ajax({
+                url: "/api/test",
+                type: "POST",
+                data: data,
+                success: function (msg) {
+                    alert(msg.result);
+                }
+            });
+        });
+        // $("#buttonOk").click(function () {
+        //     $("#srcdsn").val()
+        //     $("#dstdsn").val()
+        // });
+    });
+</script>
+</html>

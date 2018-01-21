@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="/static/js/jquery-1.9.1.min.js"></script>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <style type="text/css">
+  *{
+    padding: 0;
+    margin: 0;
+  }
+</style>
+
+<script>
+  $(function() {
+    $("select").change(function(){
+      // alert($(this).attr("id"))
+      // var id = $(this).val()
+      var col = $(this).find("option:selected").text();
+      var tdId = '#' + $(this).attr("id").replace('select', 'td')
+      var data = {name: col}
+      console.log(col);
+      // alert(col)
+      $.ajax({
+        url: "/sendjson",
+        type: "POST",
+        data: data,
+        success: function (msg) {
+          $(tdId).text(msg.value)
+        }
+      })
+    });
+
+    $("input").change(function(){
+      var col = $(this).val()
+      var tdId = '#' + $(this).attr("id").replace('input', 'td')
+      var data = {name: col}
+      alert(col)
+      $.ajax({
+        url: "/sendjson",
+        type: "POST",
+        data: data,
+        success: function (msg) {
+          $(tdId).text(msg.value)
+        }
+      })
+    });
+
+  });
+</script>
+</head>
+<body>
+
+<div class="container">
+  <h1>Etl Tools</h1>
+  <div class="row">
+    <div class="col-12 table table-responsive" style="overflow:auto;">
+      <table class="table table-hover">
+        <tbody id='table1'>
+          {% for name in columns %}
+          <tr id={{ 'table'+name }}>
+            <td style="width:6em;">
+              <label class="form-control" for={{ 'select'+name }}>{{name}}</label>
+            </td>
+            <td style="width:10em;">
+              <select class="form-control" id={{ 'select'+name }}>
+                <option value="">T1</option>
+                {% for i,v in t1_columns %}
+                <option value={{ i+1 }}>{{ v }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td style="width:10em;">
+              <input class="form-control" type="text" id={{ 'input'+name }} list="itemlist" name="">
+              <datalist id="itemlist">
+                {% for i,v in t1_columns %}
+                <option>{{ v }}</option>
+                {% endfor %}
+              </datalist>
+            </td>
+            <td id={{ 'td'+name }}>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+
+</body>
+</html>
