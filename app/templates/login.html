@@ -19,27 +19,25 @@
             </div> -->
             <div class='col-6'>
                 <h1>Src Config</h1>
-                <!-- <form role="form" action="/api/form" method="post"> -->
-                    <div class="src form-group">
+                    <div id="vm1" class="src form-group">
                         <label>数据库名称</label>
-                        <input class="con-name form-control" type="text" list="itemlist" placeholder="Connection name">
+                        <input v-model="name" class="con-name form-control" type="text" list="itemlist" placeholder="Connection name">
                         <datalist id="itemlist">
                         </datalist>
                         <label>数据库驱动名称</label>
-                        <input class="driver-name form-control" name="srcdriver" type="text" placeholder="Driver name">
+                        <input v-model="driver" class="driver-name form-control" name="srcdriver" type="text" placeholder="Driver name">
                         <label>数据库配置</label>
-                        <input class="dsn-config form-control" id="srcdsn" type="text" placeholder="DSN config">
-                        <button class="test-button form-control" type="button">test</button>
+                        <input v-model="dsn" class="dsn-config form-control" id="srcdsn" type="text" placeholder="DSN config">
+                        <button v-on="click: submit" class="test-button form-control" type="button">test</button>
                         <label class="user-names" style="display:none;">users</label>
-                        <input class="user-names form-control" id="srcuser" type="hidden" name="tablename" list="itemlistusers">
+                        <input v-model="user" class="user-names form-control" id="srcuser" type="hidden" name="tablename" list="itemlistusers">
                         <datalist id="itemlistusers">
                         </datalist>
                         <label class="tables-names" style="display:none;">tables</label>
-                        <input class="tables-names form-control" id="srctable" type="hidden" name="tablename" list="itemlisttables">
+                        <input v-model="table" class="tables-names form-control" id="srctable" type="hidden" name="tablename" list="itemlisttables">
                         <datalist id="itemlisttables">
                         </datalist>
                     </div>
-                    <!-- </form> -->
                 </div>
                 <div class='col-6'>
                     <h1>Dst Config</h1>
@@ -73,6 +71,39 @@
     <script type="text/javascript">
 
         $(function () {
+            var vm1 = new Vue({
+                el: "#vm1",
+                data: {
+                    name: '',
+                    driver: 'test',
+                    dsn: '',
+                    user: '',
+                    table: ''
+                },
+                methods: {
+                    submit: function () {
+                        $.ajax({
+                            url: "/api/connections",
+                            type: "POST",
+                            data: this.$data,
+                            success: function (msg) {
+                                alert(msg.result)
+                                var htmlContent = '';
+                                for (var i of msg.users) {
+                                    htmlContent = htmlContent + '<option>' + i + "</option>";
+                                }
+                                $("#vm1").find("#itemlistusers").html(htmlContent);
+                                $("#vm1").find(".user-names").show()
+                                // $("#vm1").find(".user-names").attr("style", "")
+                                $("#vm1").find(".user-names").attr('type', 'text')
+                                $("#vm1").find(".tables-names").show()
+                                // $("#vm1").find(".tables-names").attr("style", "")
+                                $("#vm1").find(".tables-names").attr('type', 'text')
+                            }
+                        });
+                    }
+                }
+            });
             $.ajax({
                 url: "/api/connections",
                 type: "GET",
@@ -97,30 +128,30 @@
                     }
                 });
             });
-            $('.test-button').click(function () {
-                var parent = $(this).parent();
-                var name = parent.find(".con-name").val();
-                var driver = parent.find(".driver-name").val();
-                var dsn = parent.find(".dsn-config").val();
-                var data = {name: name, driver: driver, dsn:dsn};
-                $.ajax({
-                    url: "/api/connections",
-                    type: "POST",
-                    data: data,
-                    success: function (msg) {
-                        alert(msg.result);
-                        var htmlContent = '';
-                        for (var i of msg.users) {
-                            htmlContent = htmlContent + '<option>' + i + "</option>";
-                        }
-                        parent.find("#itemlistusers").html(htmlContent);
-                        parent.find(".user-names").attr("style", "")
-                        parent.find(".user-names").attr('type', 'text')
-                        parent.find(".tables-names").attr("style", "")
-                        parent.find(".tables-names").attr('type', 'text')
-                    }
-                });
-            });
+            // $('.test-button').click(function () {
+            //     var parent = $(this).parent();
+            //     var name = parent.find(".con-name").val();
+            //     var driver = parent.find(".driver-name").val();
+            //     var dsn = parent.find(".dsn-config").val();
+            //     var data = {name: name, driver: driver, dsn:dsn};
+            //     $.ajax({
+            //         url: "/api/connections",
+            //         type: "POST",
+            //         data: data,
+            //         success: function (msg) {
+            //             alert(msg.result);
+            //             var htmlContent = '';
+            //             for (var i of msg.users) {
+            //                 htmlContent = htmlContent + '<option>' + i + "</option>";
+            //             }
+            //             parent.find("#itemlistusers").html(htmlContent);
+            //             parent.find(".user-names").attr("style", "")
+            //             parent.find(".user-names").attr('type', 'text')
+            //             parent.find(".tables-names").attr("style", "")
+            //             parent.find(".tables-names").attr('type', 'text')
+            //         }
+            //     });
+            // });
             $(".user-names").change(function () {
                 var parent = $(this).parent()
                 var url = "/api/connections/" + parent.find(".con-name").val() + '/' + $(this).val();
