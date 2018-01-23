@@ -66,10 +66,10 @@ def db_connect_test():
 
 @api.route("/connections", methods=["GET"])
 def get_connection_name():
-    list_dsn = []
+    dict_dsn = {}
     for dsn in Dsn.query.all():
-        list_dsn.append(dsn.to_json())
-    return jsonify(list_dsn)
+        dict_dsn[dsn.name] = dsn.to_json()
+    return jsonify(dict_dsn)
 
 @api.route("/connections/<name>", methods=["GET"])
 def get_connection_config(name):
@@ -90,9 +90,6 @@ def get_connection_tables(name, user):
 @api.route("/tasks", methods=["POST"])
 def get_form():
     try:
-        # print(request.form)
-        # import pdb
-        # pdb.set_trace()
         src = '-'.join([request.form['srcdsn'], request.form['srctable']])
         dst = '-'.join([request.form['dstdsn'], request.form['dsttable']])
         print(src, dst)

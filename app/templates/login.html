@@ -1,9 +1,21 @@
 <html>
 
 <head>
-  <script src="/static/js/jquery.min.js"></script>
-  <script src="/static/js/vue.min.js"></script>
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/vue.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <style type="text/css">
+    .init-hidden {
+        display: none;
+    }
+    .help-block{
+        text-align: right;
+        display: none;
+    }
+    .has-error .help-block{
+        display: block;
+    }
+</style>
 
 </head>
 
@@ -11,192 +23,195 @@
 
     <div class="container">
         <div class="row">
-<!--             <div class="form-inline form-group">
-                <label for="inputpwd" class="col-sm-2 control-label">pwd</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputpwd" placeholder="pwd">
-                </div>
-            </div> -->
             <div class='col-6'>
                 <h1>Src Config</h1>
-                    <div id="vm1" class="src form-group">
-                        <label>数据库名称</label>
-                        <input v-model="name" class="con-name form-control" type="text" list="itemlist" placeholder="Connection name">
-                        <datalist id="itemlist">
+                <div id="vm1" class="src form-group">
+                    <label>数据库名称</label>
+                    <input v-model="name" class="con-names form-control" type="text" list="namelist" placeholder="Connection name">
+                    <span class="name-help help-block"></span>
+                    <datalist id="namelist">
+                    </datalist>
+                    <label>数据库驱动名称</label>
+                    <input v-model="driver" class="driver-name form-control" name="srcdriver" type="text" placeholder="Driver name">
+                    <span class="driver-help help-block"></span>
+                    <label>数据库配置</label>
+                    <input v-model="dsn" class="dsn-config form-control" id="srcdsn" type="text" placeholder="DSN config">
+                    <span class="dsn-help help-block"></span>
+                    <button v-on="click: testConnection" class="test-button form-control" type="button">test</button>
+                    <div class="init-hidden">
+                        <label class="user-names">users</label>
+                        <input v-model="user" class="user-names form-control" id="srcuser" name="tablename" list="userlist1">
+                        <span class="user-help help-block"></span>
+                        <datalist class="user-names" id="userlist1">
                         </datalist>
-                        <label>数据库驱动名称</label>
-                        <input v-model="driver" class="driver-name form-control" name="srcdriver" type="text" placeholder="Driver name">
-                        <label>数据库配置</label>
-                        <input v-model="dsn" class="dsn-config form-control" id="srcdsn" type="text" placeholder="DSN config">
-                        <button v-on="click: submit" class="test-button form-control" type="button">test</button>
-                        <label class="user-names" style="display:none;">users</label>
-                        <input v-model="user" class="user-names form-control" id="srcuser" type="hidden" name="tablename" list="itemlistusers">
-                        <datalist id="itemlistusers">
-                        </datalist>
-                        <label class="tables-names" style="display:none;">tables</label>
-                        <input v-model="table" class="tables-names form-control" id="srctable" type="hidden" name="tablename" list="itemlisttables">
-                        <datalist id="itemlisttables">
-                        </datalist>
-                    </div>
-                </div>
-                <div class='col-6'>
-                    <h1>Dst Config</h1>
-                    <div class="dst form-group">
-                        <label>数据库名称</label>
-                        <input class="con-name form-control" type="text" list="itemlist" placeholder="Connection name">
-                        <datalist id="itemlist">
-                        </datalist>
-                        <label>数据库驱动名称</label>
-                        <input class="driver-name form-control" name="dstdriver" type="text" placeholder="Driver name">
-                        <label>数据库配置</label>
-                        <input class="dsn-config form-control" id="dstdsn" type="text" placeholder="DSN config">
-                        <button class="test-button form-control" type="button">test</button>
-                        <label class="user-names" style="display:none;">users</label>
-                        <input class="user-names form-control" id="dstuser" type="hidden" name="tablename" list="itemlistusers">
-                        <datalist id="itemlistusers">
-                        </datalist>
-                        <label class="tables-names" style="display:none;">tables</label>
-                        <input class="tables-names form-control" id="dsttable" type="hidden" name="tablename" list="itemlisttables">
-                        <datalist id="itemlisttables">
+                        <label class="tables-names">tables</label>
+                        <input v-model="table" class="table-names form-control" id="srctable" name="tablename" list="tablelist1">
+                        <span class="table-help help-block"></span>
+                        <datalist class="table-names" id="tablelist1">
                         </datalist>
                     </div>
                 </div>
-                <div class='col-12'>
-                    <button class="task-confirm form-control">确定</button>
-                </div>
-
             </div>
-        </div>
-    </body>
-    <script type="text/javascript">
+            <div class='col-6'>
+                <h1>Dst Config</h1>
+                <div id="vm2"  class="dst form-group">
+                    <label class="label-control">数据库名称</label>
+                    <input v-model="name" class="con-names form-control" type="text" list="namelist" placeholder="Connection name">
+                    <span class="name-help help-block"></span>
+                    <label class="label-control">数据库驱动名称</label>
+                    <input v-model="driver" class="driver-name form-control" name="dstdriver" type="text" placeholder="Driver name">
+                    <span class="driver-help help-block"></span>
+                    <label class="label-control">数据库配置</label>
+                    <input v-model="dsn" class="dsn-config form-control" id="dstdsn" type="text" placeholder="DSN config">
+                    <span class="dsn-help help-block"></span>
+                    <button v-on="click: testConnection" class="test-button form-control" type="button">test</button>
+                    <div class="init-hidden">
+                        <label class="user-names label-control">users</label>
+                        <input v-model="user" class="user-names form-control" id="dstuser" name="tablename" list="userlist2">
+                        <span class="user-help help-block"></span>
+                        <datalist class="user-names" id="userlist2">
+                        </datalist>
+                        <label class="table-names label-control">tables</label>
+                        <input v-model="table" class="table-names form-control" id="dsttable" name="tablename" list="tablelist2">
+                        <span class="table-help help-block"></span>
+                        <datalist class="table-names" id="tablelist2">
+                        </datalist>
+                    </div>
+                </div>
+            </div>
+            <div class='col-12'>
+                <button class="task-confirm form-control">确定</button>
+            </div>
 
-        $(function () {
-            var vm1 = new Vue({
-                el: "#vm1",
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+
+    $(function () {
+        function initVue(id) {
+            var vm = new Vue({
+                el: id,
                 data: {
                     name: '',
-                    driver: 'test',
+                    id: '',
+                    driver: '',
                     dsn: '',
                     user: '',
                     table: ''
                 },
                 methods: {
-                    submit: function () {
+                    testConnection: function () {
                         $.ajax({
                             url: "/api/connections",
                             type: "POST",
                             data: this.$data,
                             success: function (msg) {
-                                alert(msg.result)
-                                var htmlContent = '';
-                                for (var i of msg.users) {
-                                    htmlContent = htmlContent + '<option>' + i + "</option>";
+                                if (msg.result==="success") {
+                                    for (var i of msg.users) {
+                                        $(id).find("datalist.user-names").append('<option>' + i + "</option>")
+                                    }
+                                    $(id).find(".init-hidden").show()
+                                }else {
+                                    alert(msg.result);
                                 }
-                                $("#vm1").find("#itemlistusers").html(htmlContent);
-                                $("#vm1").find(".user-names").show()
-                                // $("#vm1").find(".user-names").attr("style", "")
-                                $("#vm1").find(".user-names").attr('type', 'text')
-                                $("#vm1").find(".tables-names").show()
-                                // $("#vm1").find(".tables-names").attr("style", "")
-                                $("#vm1").find(".tables-names").attr('type', 'text')
                             }
                         });
                     }
                 }
             });
+            return vm
+        }
+        var vm1 = initVue("#vm1");
+        vm2 = initVue("#vm2");
+        // var vm2 = initVue("#vm2");
+        var connections;
+        var vm = {vm1: vm1, vm2:vm2}
+        function getConnections(callback) {
             $.ajax({
                 url: "/api/connections",
                 type: "GET",
                 success: function (msg) {
-                    var htmlContent = '';
-                    for (var i of msg) {
-                        htmlContent = htmlContent + '<option>' + i.name + "</option>";
+                    for (var i in msg) {
+                        $("#namelist").append('<option>' + i + "</option>")
                     }
-                    $("#itemlist").html(htmlContent);
+                    callback(msg)
                 }
             });
-            $('.con-name').change(function () {
-                var name = $(this).val();
-                var parent = $(this).parent();
-                var url = "/api/connections/" + name.trim()
-                $.ajax({
-                    url: url,
-                    type: "GET",
-                    success: function (msg) {
-                        parent.find(".driver-name").val(msg.driver);
-                        parent.find(".dsn-config").val(msg.dsn);
+        }
+        getConnections(function (data) {
+            connections = data;
+        })
+        $('.con-names').change(function () {
+            var id = $(this).parent().attr("id")
+            if ($(this).val() in connections){
+                conObj = connections[$(this).val()]
+                if (('user' in conObj)===false){
+                    conObj.user = '';
+                }else if (('table' in conObj)===false){
+                    conObj.table = '';
+                }
+                vm[id].$data = conObj
+            }
+        });
+        function getTables(vm) {
+            var url = "/api/connections/" + vm.name + '/' + vm.user
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (msg) {
+                    for (var i of msg.tables) {
+                        $(vm.$el).find("datalist.table-names").append('<option>' + i + "</option>")
+            }}});
+        }
+        $(".user-names").change(function () {
+            var id = $(this).parent().parent().attr('id')
+            getTables(vm[id])
+        });
+        function checkNotNull(name) {
+            if (vm1[name] === "") {
+                var help = $('#vm1').find('span.'+name+'-help')
+                // alert(help.attr("class"))
+                help.text('不可为空！');
+                help.parent().addClass('has-error');
+            }else if (vm2[name] === "") {
+                var help = $('#vm2').find('span.'+name+'-help')
+                help.text('不可为空！');
+                help.parent().addClass('has-error');
+            }
+        }
+        $("button.task-confirm").click(function () {
+            checkNotNull('name')
+            checkNotNull('dsn')
+            checkNotNull('user')
+            checkNotNull('table')
+            var srcdsn = vm1.dsn.trim()
+            var srctable = vm1.user.trim() + '.' + vm1.table.trim()
+            var dstdsn = vm2.dsn.trim()
+            var dsttable = vm2.user.trim() + '.' + vm2.table.trim()
+            var data = {
+                srcdsn: srcdsn,
+                srctable: srctable,
+                dstdsn: dstdsn,
+                dsttable: dsttable
+            };
+            $.ajax({
+                url: "/api/tasks",
+                type: "POST",
+                data: data,
+                success: function (msg) {
+                    if (msg.result==='success') {
+                        location.assign("/task/config");
                     }
-                });
-            });
-            // $('.test-button').click(function () {
-            //     var parent = $(this).parent();
-            //     var name = parent.find(".con-name").val();
-            //     var driver = parent.find(".driver-name").val();
-            //     var dsn = parent.find(".dsn-config").val();
-            //     var data = {name: name, driver: driver, dsn:dsn};
-            //     $.ajax({
-            //         url: "/api/connections",
-            //         type: "POST",
-            //         data: data,
-            //         success: function (msg) {
-            //             alert(msg.result);
-            //             var htmlContent = '';
-            //             for (var i of msg.users) {
-            //                 htmlContent = htmlContent + '<option>' + i + "</option>";
-            //             }
-            //             parent.find("#itemlistusers").html(htmlContent);
-            //             parent.find(".user-names").attr("style", "")
-            //             parent.find(".user-names").attr('type', 'text')
-            //             parent.find(".tables-names").attr("style", "")
-            //             parent.find(".tables-names").attr('type', 'text')
-            //         }
-            //     });
-            // });
-            $(".user-names").change(function () {
-                var parent = $(this).parent()
-                var url = "/api/connections/" + parent.find(".con-name").val() + '/' + $(this).val();
-                $.ajax({
-                    url: url,
-                    type: "GET",
-                    success: function (msg) {
-                        var htmlContent = '';
-                        for (var i of msg.tables) {
-                            htmlContent = htmlContent + '<option>' + i + "</option>";
-                        }
-                        $("#itemlisttables").html(htmlContent);
+                    else{
+                        alert(msg.result);
                     }
-                });
+                }
             });
-
-            $("button.task-confirm").click(function () {
-                var srcdsn = $("#srcdsn").val();
-                var srcname = $("#srcuser").val() + "." + $("#srctable").val();
-                var dstdsn = $("#dstdsn").val();
-                var dstname = $("#dstuser").val() + "." + $("#dsttable").val();
-                var data = {
-                    srcdsn: srcdsn,
-                    srctable: srcname,
-                    dstdsn: dstdsn,
-                    dsttable: dstname
-                };
-                $.ajax({
-                    url: "/api/tasks",
-                    type: "POST",
-                    data: data,
-                    success: function (msg) {
-                        if (msg.result==='success') {
-                            location.assign("/task/config");
-                        }
-                        else{
-                            alert(msg.result);
-                        }
-                    }
-                });
-            });
-        // $("#buttonOk").click(function () {
-        //     $("#srcdsn").val()
-        //     $("#dstdsn").val()
-        // });
+        });
+        $('input').on('focus', function() {
+          $(this).parent().removeClass('has-error');
+        });
     });
 </script>
 </html>
