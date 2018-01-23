@@ -8,7 +8,7 @@ class Config(object):
     # JSON_AS_ASCII = False
     # JSONIFY_PRETTYPRINT_REGULAR = False
     # JSONIFY_MIMETYPE = 'application/json;charset=utf-8'
-    # COOKIE_NAME = 'aweSession'
+    COOKIE_NAME = 'dsn'
     # COOKIE_KEY = 'MbLog'
 
     @staticmethod

@@ -34,7 +34,7 @@
       var col = $(this).val()
       var tdId = '#' + $(this).attr("id").replace('input', 'td')
       var data = {name: col}
-      alert(col)
+      // alert(col)
       $.ajax({
         url: "/sendjson",
         type: "POST",

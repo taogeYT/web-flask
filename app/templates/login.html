@@ -1,7 +1,8 @@
 <html>
 
 <head>
-  <script src="/static/js/jquery-1.9.1.min.js"></script>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/vue.min.js"></script>
   <link rel="stylesheet" href="/static/css/bootstrap.min.css">
 
 </head>
@@ -18,7 +19,7 @@
             </div> -->
             <div class='col-6'>
                 <h1>Src Config</h1>
-<form role="form" action="/api/form" method="post">
+                <!-- <form role="form" action="/api/form" method="post"> -->
                     <div class="src form-group">
                         <label>数据库名称</label>
                         <input class="con-name form-control" type="text" list="itemlist" placeholder="Connection name">
@@ -27,73 +28,140 @@
                         <label>数据库驱动名称</label>
                         <input class="driver-name form-control" name="srcdriver" type="text" placeholder="Driver name">
                         <label>数据库配置</label>
-                        <input class="dsn-config form-control" name="srcdsn" type="text" placeholder="DSN config">
+                        <input class="dsn-config form-control" id="srcdsn" type="text" placeholder="DSN config">
                         <button class="test-button form-control" type="button">test</button>
+                        <label class="user-names" style="display:none;">users</label>
+                        <input class="user-names form-control" id="srcuser" type="hidden" name="tablename" list="itemlistusers">
+                        <datalist id="itemlistusers">
+                        </datalist>
+                        <label class="tables-names" style="display:none;">tables</label>
+                        <input class="tables-names form-control" id="srctable" type="hidden" name="tablename" list="itemlisttables">
+                        <datalist id="itemlisttables">
+                        </datalist>
                     </div>
-            </div>
-            <div class='col-6'>
-                <h1>Dst Config</h1>
-                <div class="dst form-group">
-                    <label>数据库名称</label>
-                    <input class="con-name form-control" type="text" list="itemlist" placeholder="Connection name">
-                    <datalist id="itemlist">
-                    </datalist>
-                    <label>数据库驱动名称</label>
-                    <input class="driver-name form-control" name="dstdriver" type="text" placeholder="Driver name">
-                    <label>数据库配置</label>
-                    <input class="dsn-config form-control" name="dstdsn" type="text" placeholder="DSN config">
-                    <button class="test-button form-control" type="button">test</button>
+                    <!-- </form> -->
                 </div>
-            </div>
-            <div class='col-12'>
-                <button class="form-control">确定</button>
-            </div>
-</form>
-        </div>
-    </div>
-</body>
-<script type="text/javascript">
+                <div class='col-6'>
+                    <h1>Dst Config</h1>
+                    <div class="dst form-group">
+                        <label>数据库名称</label>
+                        <input class="con-name form-control" type="text" list="itemlist" placeholder="Connection name">
+                        <datalist id="itemlist">
+                        </datalist>
+                        <label>数据库驱动名称</label>
+                        <input class="driver-name form-control" name="dstdriver" type="text" placeholder="Driver name">
+                        <label>数据库配置</label>
+                        <input class="dsn-config form-control" id="dstdsn" type="text" placeholder="DSN config">
+                        <button class="test-button form-control" type="button">test</button>
+                        <label class="user-names" style="display:none;">users</label>
+                        <input class="user-names form-control" id="dstuser" type="hidden" name="tablename" list="itemlistusers">
+                        <datalist id="itemlistusers">
+                        </datalist>
+                        <label class="tables-names" style="display:none;">tables</label>
+                        <input class="tables-names form-control" id="dsttable" type="hidden" name="tablename" list="itemlisttables">
+                        <datalist id="itemlisttables">
+                        </datalist>
+                    </div>
+                </div>
+                <div class='col-12'>
+                    <button class="task-confirm form-control">确定</button>
+                </div>
 
-    $(function () {
-        $.ajax({
-            url: "/api/db_history",
-            type: "GET",
-            success: function (msg) {
-                var htmlContent = '';
-                for (var i of msg) {
-                    htmlContent = htmlContent + '<option>' + i.name + "</option>";
-                }
-                $("#itemlist").html(htmlContent);
-            }
-        });
-        $('.con-name').change(function () {
-            var name = $(this).val();
-            var parent = $(this).parent();
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+
+        $(function () {
             $.ajax({
-                url: "/api/db_history",
-                type: "POST",
-                data: {name: name},
+                url: "/api/connections",
+                type: "GET",
                 success: function (msg) {
-                    parent.find(".driver-name").val(msg.driver);
-                    parent.find(".dsn-config").val(msg.dsn);
+                    var htmlContent = '';
+                    for (var i of msg) {
+                        htmlContent = htmlContent + '<option>' + i.name + "</option>";
+                    }
+                    $("#itemlist").html(htmlContent);
                 }
             });
-        });
-        $('.test-button').click(function () {
-            var parent = $(this).parent();
-            var name = parent.find(".con-name").val();
-            var driver = parent.find(".driver-name").val();
-            var dsn = parent.find(".dsn-config").val();
-            var data = {name: name, driver: driver, dsn:dsn};
-            $.ajax({
-                url: "/api/test",
-                type: "POST",
-                data: data,
-                success: function (msg) {
-                    alert(msg.result);
-                }
+            $('.con-name').change(function () {
+                var name = $(this).val();
+                var parent = $(this).parent();
+                var url = "/api/connections/" + name.trim()
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    success: function (msg) {
+                        parent.find(".driver-name").val(msg.driver);
+                        parent.find(".dsn-config").val(msg.dsn);
+                    }
+                });
             });
-        });
+            $('.test-button').click(function () {
+                var parent = $(this).parent();
+                var name = parent.find(".con-name").val();
+                var driver = parent.find(".driver-name").val();
+                var dsn = parent.find(".dsn-config").val();
+                var data = {name: name, driver: driver, dsn:dsn};
+                $.ajax({
+                    url: "/api/connections",
+                    type: "POST",
+                    data: data,
+                    success: function (msg) {
+                        alert(msg.result);
+                        var htmlContent = '';
+                        for (var i of msg.users) {
+                            htmlContent = htmlContent + '<option>' + i + "</option>";
+                        }
+                        parent.find("#itemlistusers").html(htmlContent);
+                        parent.find(".user-names").attr("style", "")
+                        parent.find(".user-names").attr('type', 'text')
+                        parent.find(".tables-names").attr("style", "")
+                        parent.find(".tables-names").attr('type', 'text')
+                    }
+                });
+            });
+            $(".user-names").change(function () {
+                var parent = $(this).parent()
+                var url = "/api/connections/" + parent.find(".con-name").val() + '/' + $(this).val();
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    success: function (msg) {
+                        var htmlContent = '';
+                        for (var i of msg.tables) {
+                            htmlContent = htmlContent + '<option>' + i + "</option>";
+                        }
+                        $("#itemlisttables").html(htmlContent);
+                    }
+                });
+            });
+
+            $("button.task-confirm").click(function () {
+                var srcdsn = $("#srcdsn").val();
+                var srcname = $("#srcuser").val() + "." + $("#srctable").val();
+                var dstdsn = $("#dstdsn").val();
+                var dstname = $("#dstuser").val() + "." + $("#dsttable").val();
+                var data = {
+                    srcdsn: srcdsn,
+                    srctable: srcname,
+                    dstdsn: dstdsn,
+                    dsttable: dstname
+                };
+                $.ajax({
+                    url: "/api/tasks",
+                    type: "POST",
+                    data: data,
+                    success: function (msg) {
+                        if (msg.result==='success') {
+                            location.assign("/task/config");
+                        }
+                        else{
+                            alert(msg.result);
+                        }
+                    }
+                });
+            });
         // $("#buttonOk").click(function () {
         //     $("#srcdsn").val()
         //     $("#dstdsn").val()
