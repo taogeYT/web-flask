@@ -1,44 +1,10 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, g
 from py_db import connection
 import datetime
 from app.models import Dsn
+from app.main.utils import get_users, get_tables
+from collections import defaultdict
 api = Blueprint('api', __name__, url_prefix='/api')
-
-def get_tables(owner, db):
-    sql = """
-SELECT
-    TABLE_NAME
-FROM
-    ALL_TABLES
-WHERE
-    OWNER = '%s'
-""" % owner
-    tables = db.query(sql)
-    if tables:
-        return [i[0] if i else None for i in tables]
-    else:
-        return None
-
-def get_comments(owner, table, db):
-    sql = """
-SELECT
-    COLUMN_NAME,
-    COMMENTS
-FROM
-    all_col_comments
-WHERE
-    OWNER = '%s'
-AND TABLE_NAME = '%s'
-""" % (owner, table)
-    return db.query(sql)
-
-def get_users(db):
-    sql = "select username from all_users"
-    users = db.query(sql)
-    if users:
-        return [i[0] if i else None for i in users]
-    else:
-        return None
 
 @api.route("/connections", methods=["POST"])
 def db_connect_test():
@@ -100,3 +66,22 @@ def get_form():
     except Exception as e:
         resp = jsonify(result="fail: %s" % e)
     return resp
+
+@api.route("/fields", methods=["GET"])
+def get_fields():
+    with connection(g.__dst__[0]) as db:
+        print(g.__dst__[0])
+        db.dict_query("select * from %s where rownum <1" % g.__dst__[1])
+        columns = db.columns
+    return jsonify({i: "" for i in columns})
+
+@api.route("/datas", methods=["GET"])
+def get_datas():
+    with connection(g.__src__[0]) as db:
+        print(g.__src__[0])
+        rs = db.dict_query("select * from %s where rownum<5" % g.__src__[1])
+    dict_resp = defaultdict(list)
+    for r in rs:
+        for i in db.columns:
+            dict_resp[i].append(r[i])
+    return jsonify(dict_resp)

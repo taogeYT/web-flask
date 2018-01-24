@@ -1,93 +1,128 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="/static/js/jquery-1.9.1.min.js"></script>
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-  <style type="text/css">
-  *{
-    padding: 0;
-    margin: 0;
-  }
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/vue.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <style type="text/css">
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    .test
+    {
+/*white-space:nowrap;*/
+width:14em;
+overflow:hidden;
+/*table-layout:auto;*/
+word-wrap: break-word;
+    }
+    .test2
+    {
+        /*空白字符是否换行*/
+        white-space:nowrap;
+        width:6em;
+        overflow:hidden;
+        /*边框样式*/
+        /*border:1px solid #000000;*/
+        /*元素的尺寸大小*/
+        font-size: 10px;
+    }
+    .test:hover
+{
+text-overflow:inherit;
+overflow: scroll;
+/*display:table-row;*/
+}
 </style>
 
 <script>
-  $(function() {
-    $("select").change(function(){
-      // alert($(this).attr("id"))
-      // var id = $(this).val()
-      var col = $(this).find("option:selected").text();
-      var tdId = '#' + $(this).attr("id").replace('select', 'td')
-      var data = {name: col}
-      console.log(col);
-      // alert(col)
-      $.ajax({
-        url: "/sendjson",
-        type: "POST",
-        data: data,
-        success: function (msg) {
-          $(tdId).text(msg.value)
+    $(function() {
+        var datas;
+        function getDatas (callback) {
+            $.ajax({
+                url: "/api/datas",
+                type: "GET"
+            }).done(function (msg) {
+                callback(msg);
+            });
         }
-      })
-    });
-
-    $("input").change(function(){
-      var col = $(this).val()
-      var tdId = '#' + $(this).attr("id").replace('input', 'td')
-      var data = {name: col}
-      // alert(col)
-      $.ajax({
-        url: "/sendjson",
-        type: "POST",
-        data: data,
-        success: function (msg) {
-          $(tdId).text(msg.value)
+        getDatas(function (msg) {
+            datas = msg;
+        });
+        function initVM(msg) {
+            var vm = new Vue({
+                el: '#vm',
+                data: msg,
+                methods:{
+                    click: function () {}
+                }
+            });
         }
-      })
-    });
+        $.ajax({
+            url: "/api/fields",
+            type: "GET"
+        }).done(function (msg) {
+            initVM(msg);
+        });
 
-  });
+        $("input.src-field-list").change(function () {
+            var name = $(this).attr("id").replace('input', '');
+            var field = $(this).val()
+            $("td.tdtmp").remove()
+            $("#field" + name+">td.tddata").remove()
+            for (var value of datas[field]){
+                $("#field" + name).append('<td class="tddata"><div class="test" style="text-overflow:clip;">'+value+'</div></td>')
+            }
+        });
+
+    });
 </script>
 </head>
 <body>
 
-<div class="container">
-  <h1>Etl Tools</h1>
-  <div class="row">
-    <div class="col-12 table table-responsive" style="overflow:auto;">
-      <table class="table table-hover">
-        <tbody id='table1'>
-          {% for name in columns %}
-          <tr id={{ 'table'+name }}>
-            <td style="width:6em;">
-              <label class="form-control" for={{ 'select'+name }}>{{name}}</label>
-            </td>
-            <td style="width:10em;">
-              <select class="form-control" id={{ 'select'+name }}>
-                <option value="">T1</option>
-                {% for i,v in t1_columns %}
-                <option value={{ i+1 }}>{{ v }}</option>
-                {% endfor %}
-              </select>
-            </td>
-            <td style="width:10em;">
-              <input class="form-control" type="text" id={{ 'input'+name }} list="itemlist" name="">
-              <datalist id="itemlist">
-                {% for i,v in t1_columns %}
-                <option>{{ v }}</option>
-                {% endfor %}
-              </datalist>
-            </td>
-            <td id={{ 'td'+name }}>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div class="container">
+        <h1>Etl Tools</h1>
+        <datalist id="itemlist">
+            {% for i,v in t1_columns %}
+            <option>{{ v }}</option>
+            {% endfor %}
+        </datalist>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">Go!</button>
+                    </span>
+                    <input type="text" class="form-control">
+                </div>
+
+                <div id="vm" class="table-responsive" style="overflow:auto;">
+                    <table width="50%" class="table text-nowrap table-condensed table-hover table-bordered">
+                        <tbody id='table1'>
+                            {% for name in columns %}
+                            <tr id={{'field'+name}}>
+                                <td class="test2">
+                                    <div class="test2 input-group input-group-sm">
+                                        <span class="input-group-addon">test</span>
+                                        <label class="form-control" for={{"input"+name}}>{{name}}</label>
+                                    </div>
+                                </td>
+                                <td class="test2">
+                                    <div class="test2 input-group input-group-sm">
+                                        <input v-model={{name}} id={{'input'+name}} class="src-field-list form-control" type="text" list="itemlist">
+                                    </div>
+                                </td>
+                                <td class="tdtmp"></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
     </div>
-
-  </div>
-</div>
-
 
 </body>
 </html>

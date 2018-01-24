@@ -327,33 +327,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "app/main/api.py",
-			"settings":
-			{
-				"buffer_size": 2912,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/templates/login.html",
-			"settings":
-			{
-				"buffer_size": 8934,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "sftp-config.json",
-			"settings":
-			{
-				"buffer_size": 1323,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "Packages/Python/Python.sublime-build",
 	"build_system_choices":
@@ -507,15 +480,21 @@
 	[
 		"/C/Users/Administrator/Desktop/web-flask",
 		"/C/Users/Administrator/Desktop/web-flask/app",
+		"/C/Users/Administrator/Desktop/web-flask/app/static",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates",
-		"/C/Users/Administrator/Desktop/py_proj/flask_project",
-		"/C/Users/Administrator/Desktop/py_proj/flask_project/awesome",
 		"/C/Users/Administrator/Desktop/src/etl-web",
 		"/C/Users/Administrator/Desktop/src/etl-web/app",
 		"/C/Users/Administrator/Desktop/src/etl-web/app/templates"
 	],
 	"file_history":
 	[
+		"/C/Users/Administrator/Desktop/web-flask/app/templates/index.html",
+		"/C/Users/Administrator/Desktop/web-flask/app/main/api.py",
+		"/C/Users/Administrator/Desktop/web-flask/app/main/utils.py",
+		"/C/Users/Administrator/Desktop/web-flask/app/__init__.py",
+		"/C/Users/Administrator/Desktop/web-flask/app/templates/login.html",
+		"/C/Users/Administrator/Desktop/web-flask/app/main/page.py",
+		"/C/Users/Administrator/Desktop/web-flask/sftp-config.json",
 		"/C/Users/Administrator/Desktop/web_old/app/main/api.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates/test.html",
 		"/C/Users/Administrator/Desktop/web/app/api/api.py",
@@ -636,14 +615,7 @@
 		"/C/Users/acer/Desktop/src/py_etl/py_etl/utils.py",
 		"/C/Users/acer/Desktop/src/gps/vastio/device/merge.py",
 		"/C/Users/acer/Desktop/Code/jwdn85/etl/config.py",
-		"/C/Users/acer/Desktop/src/py_etl/tests/test_basic.py",
-		"/C/Users/acer/Desktop/src/py_etl/tests/context.py",
-		"/C/Users/acer/Desktop/src/py_db/py_db/base.py",
-		"/C/Users/acer/Desktop/src/py_etl/py_etl/task.py",
-		"/C/Users/acer/Desktop/src/py_etl/docs/example/work.py",
-		"/C/Users/acer/Desktop/src/py_etl/docs/example/vst_stat_state.py",
-		"/C/Users/acer/Desktop/work_basic.py",
-		"/C/Users/acer/Desktop/src/py_etl/docs/Changelog.md"
+		"/C/Users/acer/Desktop/src/py_etl/tests/test_basic.py"
 	],
 	"find":
 	{
@@ -694,128 +666,8 @@
 	"groups":
 	[
 		{
-			"selected": 1,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "app/main/api.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2912,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								330,
-								330
-							]
-						],
-						"settings":
-						{
-							"auto_complete_triggers":
-							[
-								{
-									"characters": ".",
-									"selector": "source.python - string - comment - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								}
-							],
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1017.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "app/templates/login.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8934,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6768,
-								6768
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"is_init_dirty_state": false,
-							"origin_encoding": "UTF-8",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2461.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "sftp-config.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1323,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								561,
-								561
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"origin_encoding": "ASCII",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				}
 			]
 		}
 	],
