@@ -327,6 +327,27 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "app/templates/index.html",
+			"settings":
+			{
+				"buffer_size": 5255,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <title>Bootstrap 实例 - 下拉菜单（Dropdowns）</title>\n  <link rel=\"stylesheet\" href=\"https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css\">\n  <script src=\"https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js\"></script>\n  <script src=\"https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>\n<!--   <link rel=\"stylesheet\" href=\"/static/css/bootstrap.min.css\">\n  <script src=\"/static/js/jquery-2.1.1.min.js\"></script>\n  <script src=\"/static/js/bootstrap.min.js\"></script> -->\n  <style>\n    div.test\n    {\n      /*空白字符是否换行*/\n      white-space:nowrap;\n      /*width:12em;*/\n      width:20%;\n      overflow:hidden;\n      /*边框样式*/\n      /*border:1px solid #000000;*/\n      /*元素的尺寸大小*/\n      font-size: 10px;\n    }\n\n    div.test:hover\n    {\n      text-overflow:inherit;\n      overflow:visible;\n      display:table-row;\n    }\n  </style>\n</head>\n<body>\n\n  <div class=\"container\">\n    <div class=\"row clearfix\">\n      <div class=\"col-md-12 column\">\n\n        <nav class=\"navbar navbar-default\" role=\"navigation\">\n          <div class=\"container-fluid\">\n            <div class=\"navbar-header\">\n             <a class=\"navbar-brand\" href=\"#\">MYORACLE</a>\n           </div>\n\n           <div>\n            <ul id=\"myTab\" class=\"nav navbar-nav\">\n\n              {% if all_tables %}\n              {% for user,tables in all_tables.items() %}\n              {% if tables %}\n              <li class=\"dropdown\">\n                <a href=\"#\" id=\"myTab{{user}}\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">{{user}}<b class=\"caret\"></b></a>\n                <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"myTab{{user}}\">\n                  {% for name in tables %}\n                  {% if name in flag and user in flag %}\n                  <li class=\"active\"><a href=\"#{{name}}\" data-toggle=\"tab\" aria-expanded=\"true\">{{name}}</a></li>\n                  {% else %}\n                  <li><a href=\"/table?user={{user}}&table={{name}}\" >{{name}}</a></li>\n                  {% endif %}\n                  {% endfor %}\n                </ul>\n              </li>\n              {% endif %}\n              {% endfor %}\n              {% endif %}\n            </ul>\n          </div>\n        </div>\n      </nav>\n      <div>\n        {% if flag %}\n        <form role=\"form\" action=\"/table?user={{flag[0]}}&table={{flag[1]}}\" method=\"post\">\n          <div class=\"form-group\">\n            {% if search %}\n            <input type=\"text\" name=\"search\" value=\"{{search}}\" class=\"form-control\"/>\n            {% else %}\n            <input type=\"text\" name=\"search\" value=\"select * from {{flag[0]}}.{{flag[1]}} \" class=\"form-control\"/>\n            {% endif %}\n          </div> <button type=\"submit\" class=\"btn btn-default\">Submit</button>\n        </form>\n        {% endif %}\n      </div>\n      {% if datas %}\n      <div class=\"table-responsive\" style=\"overflow:auto; border:1px solid red; height:300px;\">\n        <table class=\"table table-condensed table-hover table-bordered\">\n          <thead>\n            <tr>\n              {% for name in columns %}\n              <th>\n                <div class=\"test\" style=\"text-overflow:ellipsis;\">\n                  {{comments[name]}}\n                </div>\n              </th>\n              {% endfor %}\n            </tr>\n            <tr>\n              {% for name in columns %}\n              <th>\n                <div class=\"test\" style=\"text-overflow:ellipsis;\">\n                  {{name}}\n                </div>\n              </th>\n              {% endfor %}\n            </tr>\n          </thead>\n          <tbody>\n            {% for data in datas %}\n            <tr>\n              {% for value in data.values() %}\n              <td class=\"center\">\n                <div class=\"test\" style=\"text-overflow:clip;\">{{value}}</div>\n              </td>\n              {% endfor %}\n            </tr>\n            {% endfor %}\n          </tbody>\n        </table>\n      </div>\n      {% endif %}\n\n    </div>\n  </div>\n\n</body>\n</html>\n",
+			"file": "/C/Users/Administrator/Desktop/src/etl-web/app/templates/table.html",
+			"file_size": 4148,
+			"file_write_time": 131531550921925428,
+			"settings":
+			{
+				"buffer_size": 3991,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "Packages/Python/Python.sublime-build",
 	"build_system_choices":
@@ -480,6 +501,7 @@
 	[
 		"/C/Users/Administrator/Desktop/web-flask",
 		"/C/Users/Administrator/Desktop/web-flask/app",
+		"/C/Users/Administrator/Desktop/web-flask/app/main",
 		"/C/Users/Administrator/Desktop/web-flask/app/static",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates",
 		"/C/Users/Administrator/Desktop/src/etl-web",
@@ -488,12 +510,12 @@
 	],
 	"file_history":
 	[
-		"/C/Users/Administrator/Desktop/web-flask/app/templates/index.html",
+		"/C/Users/Administrator/Desktop/web-flask/app/main/page.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/main/api.py",
+		"/C/Users/Administrator/Desktop/web-flask/app/templates/index.html",
 		"/C/Users/Administrator/Desktop/web-flask/app/main/utils.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/__init__.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates/login.html",
-		"/C/Users/Administrator/Desktop/web-flask/app/main/page.py",
 		"/C/Users/Administrator/Desktop/web-flask/sftp-config.json",
 		"/C/Users/Administrator/Desktop/web_old/app/main/api.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates/test.html",
@@ -666,8 +688,77 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "app/templates/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5255,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								404,
+								321
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/Administrator/Desktop/src/etl-web/app/templates/table.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3991,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3420,
+								3428
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1473.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
 			]
 		}
 	],

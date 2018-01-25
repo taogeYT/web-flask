@@ -9,47 +9,58 @@
         padding: 0;
         margin: 0;
     }
-    .test
+    /*.col-lg-* div{padding:0;marign:0;}*/
+    [class*="col-lg-"] {
+    padding: 0 !important;
+    margin: 0 !important;
+    }
+    .table{height:300px;border:1px solid #999;}
+    .td-data
     {
-/*white-space:nowrap;*/
-width:14em;
-overflow:hidden;
-/*table-layout:auto;*/
-word-wrap: break-word;
+        white-space:nowrap;/*空白字符是否换行*/
+        width:12em;
+        /*width:100%;*/
+        overflow:hidden;
+        /*边框样式*/
+        /*border:1px solid #000000;*/
+        /*元素的尺寸大小*/
+        font-size: 15px;
+        text-overflow:ellipsis;
     }
     .test2
     {
         /*空白字符是否换行*/
         white-space:nowrap;
-        width:6em;
+        /*width:6em;*/
+        /*width:100%;*/
         overflow:hidden;
         /*边框样式*/
         /*border:1px solid #000000;*/
         /*元素的尺寸大小*/
         font-size: 10px;
     }
-    .test:hover
-{
-text-overflow:inherit;
-overflow: scroll;
-/*display:table-row;*/
-}
-</style>
-
-<script>
-    $(function() {
-        var datas;
-        function getDatas (callback) {
-            $.ajax({
-                url: "/api/datas",
-                type: "GET"
-            }).done(function (msg) {
-                callback(msg);
-            });
+    .td-data:hover
+    {
+        text-overflow:inherit;
+        overflow: scroll;
+        display:table-row;
         }
-        getDatas(function (msg) {
-            datas = msg;
-        });
+    </style>
+
+    <script>
+        $(function() {
+        // var datas;
+        // function getDatas (callback) {
+        //     $.ajax({
+        //         url: "/api/datas",
+        //         type: "GET"
+        //     }).done(function (msg) {
+        //         callback(msg);
+        //     });
+        // }
+        // getDatas(function (msg) {
+        //     datas = msg;
+        // });
         function initVM(msg) {
             var vm = new Vue({
                 el: '#vm',
@@ -69,11 +80,16 @@ overflow: scroll;
         $("input.src-field-list").change(function () {
             var name = $(this).attr("id").replace('input', '');
             var field = $(this).val()
-            $("td.tdtmp").remove()
-            $("#field" + name+">td.tddata").remove()
-            for (var value of datas[field]){
-                $("#field" + name).append('<td class="tddata"><div class="test" style="text-overflow:clip;">'+value+'</div></td>')
-            }
+            var url = "/api/datas/" + field;
+            $.ajax({
+                url: url,
+                type: "GET"
+            }).done(function (msg){
+                $("#data0"+name).text(msg[0])
+                $("#data1"+name).text(msg[1])
+                $("#data2"+name).text(msg[2])
+                $("#data3"+name).text(msg[3])
+            });
         });
 
     });
@@ -96,24 +112,41 @@ overflow: scroll;
                     </span>
                     <input type="text" class="form-control">
                 </div>
+            </div>
+            <div class="col-lg-12"><br></div>
 
-                <div id="vm" class="table-responsive" style="overflow:auto;">
-                    <table width="50%" class="table text-nowrap table-condensed table-hover table-bordered">
+                <div id="vm" class="col-lg-3" style="padding: 0;">
+                    <table class="table text-nowrap table-condensed table-hover table-bordered">
                         <tbody id='table1'>
                             {% for name in columns %}
                             <tr id={{'field'+name}}>
-                                <td class="test2">
+                                <td >
                                     <div class="test2 input-group input-group-sm">
                                         <span class="input-group-addon">test</span>
                                         <label class="form-control" for={{"input"+name}}>{{name}}</label>
                                     </div>
                                 </td>
-                                <td class="test2">
+                                <td>
                                     <div class="test2 input-group input-group-sm">
+                                        <span class="input-group-addon">test</span>
                                         <input v-model={{name}} id={{'input'+name}} class="src-field-list form-control" type="text" list="itemlist">
                                     </div>
                                 </td>
-                                <td class="tdtmp"></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-lg-9" style="overflow:auto;" style="padding: 0;">
+                    <table class="table text-nowrap table-condensed table-hover table-bordered">
+                        <tbody id='table2'>
+                            {% for name in columns %}
+                            <tr>
+                                <td><div id={{'data0'+name}} class="td-data">1111111111111111111111</div></td>
+                                <td><div id={{'data1'+name}} class="td-data">aaaaaaaaaaaaaaa</div></td>
+                                <td><div id={{'data2'+name}} class="td-data">ddddd</div></td>
+                                <td><div id={{'data3'+name}} class="td-data">aaa</div></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -121,7 +154,7 @@ overflow: scroll;
                 </div>
             </div>
 
-        </div>
+
     </div>
 
 </body>

@@ -79,9 +79,17 @@ def get_fields():
 def get_datas():
     with connection(g.__src__[0]) as db:
         print(g.__src__[0])
-        rs = db.dict_query("select * from %s where rownum<5" % g.__src__[1])
+        rs = db.dict_query("select * from %s where fssj is not null" % g.__src__[1])
     dict_resp = defaultdict(list)
     for r in rs:
         for i in db.columns:
             dict_resp[i].append(r[i])
     return jsonify(dict_resp)
+
+@api.route("/datas/<name>", methods=["GET"])
+def get_a_data(name):
+    with connection(g.__src__[0]) as db:
+        print(g.__src__[0])
+        rs = db.query("select %s from %s where fssj is not null and rownum<5" % (name, g.__src__[1]))
+    list_resp = [i[0] for i in rs]
+    return jsonify(list_resp)

@@ -15,12 +15,12 @@ def login():
 def index():
     if g.__src__ is None or g.__dst__ is None:
         return redirect(url_for('page.login'))
+    print("connecting...  ", g.__src__[0])
     with connection(g.__src__[0]) as db:
-        print(g.__src__[0])
-        db.dict_query("select * from %s" % g.__src__[1])
+        db.dict_query("select * from %s where rownum<1" % g.__src__[1])
         t1_columns = [(i,v) for i,v in enumerate(db.columns)]
+    print("connecting...  ", g.__dst__[0])
     with connection(g.__dst__[0]) as db:
-        print(g.__dst__[0])
         db.dict_query("select * from %s where rownum <1" % g.__dst__[1])
         columns = db.columns
     return render_template('index.html', columns=columns, t1_columns=t1_columns)
