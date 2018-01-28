@@ -1,83 +1,81 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <script src="/static/js/jquery-1.9.1.min.js"></script>
+    <meta charset="UTF-8">
+    <title>弹出框（模态框）</title>
+    <script src="/static/js/jquery.min.js"></script>
+
     <script src="/static/js/vue.min.js"></script>
+        <!-- <script src="/static/js/bootstrap.min.js"></script> -->
+        <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-
-    <script type="text/javascript">
-        $(function () {
-            var datas;
-            function load_data(callback) {
-                // $.ajax({
-                //     url: "/api/vm",
-                //     type: "GET",
-                //     // error: function(msg){},
-                //     success: function (msg) {
-                //         callback(msg);
-                //     }
-                // });
-                $.getJSON('/api/vm', function (msg) {
-                    var htmlContent = '';
-                    for (var i in msg) {
-                        htmlContent = htmlContent + '<option>' + i + "</option>";
-                    }
-                    $("datalist").html(htmlContent);
-                    callback(msg);
-                })
-            }
-            load_data(function (msg) {
-                datas = msg;
-            });
-            // alert(datas)
-            var vm = new Vue({
-                el: '#vm',
-                data: {
-                    name: 'test',
-                    id: '',
-                    driver: 'pymysql',
-                    dsn: 'root:root@local'
-                },
-                methods: {
-                    submit: function () {
-                        alert(this.driver)
-                    }
-                }
-            });
-
-            $('#vm').show();
-            // $("input.con-name").change(function () {
-            //     // vm.name = 'test123'
-            //     vm.$data = datas[$(this).val()]
-            // });
-            function inputSelect() {
-                vm.$data = datas[$("input.con-name").val()]
-            }
-            $("input.con-name").change(inputSelect);
-        });
-
-
-    </script>
 </head>
 <body>
 
-  <div class='col-6'>
-    <h1>Src Config</h1>
-<!--             <select id='selectid' name="country">
-            </select> -->
-    <div id="vm" class="src form-group">
-      <input v-model="id" type="hidden">
-      <label>数据库名称</label>
-      <input v-model="name" class="con-name form-control" type="text" list="itemlist" placeholder="Connection name">
-      <datalist id="itemlist">
-      </datalist>
-      <label>数据库驱动名称</label>
-      <input v-model="driver" class="driver-name form-control" name="srcdriver" type="text" placeholder="Driver name">
-      <label>数据库配置</label>
-      <input v-model="dsn" class="dsn-config form-control" name="srcdsn" type="text" placeholder="DSN config">
-      <button v-on="click: submit" class="test-button form-control" type="button">test</button>
-  </div>
+<h2>创建模态框（Modal）</h2>
+<!-- 按钮触发模态框 -->
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">开始演示模态框</button>
+<!-- 模态框（Modal） -->
+<div class="modal hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">模态框（Modal）标题</h4>
+            </div>
+            <div class="modal-body">在这里添加一些文本</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<input id="btntext" type="button" value="添加文本组件" data-toggle="modal" data-target="#myModal"  href="../SysManage/ZuJianManage.aspx"/>
+
+<!-- Modal -->
+<div class="modal hide fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-header">
+        <button class="close" type="button" data-dismiss="modal">×</button>
+        <h3 id="myModalLabel">Modal header</h3>
+    </div>
+    <div class="modal-body">a</div>
 </div>
 
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+ <div class="modal-dialog" role="document">
+ <div class="modal-content">
+ <div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+  <h4 class="modal-title" id="myModalLabel">新增</h4>
+ </div>
+ <div class="modal-body">
+
+  <div class="form-group">
+  <label for="txt_departmentname">部门名称</label>
+  <input type="text" name="txt_departmentname" class="form-control" id="txt_departmentname" placeholder="部门名称">
+  </div>
+  <div class="form-group">
+  <label for="txt_parentdepartment">上级部门</label>
+  <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment" placeholder="上级部门">
+  </div>
+  <div class="form-group">
+  <label for="txt_departmentlevel">部门级别</label>
+  <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel" placeholder="部门级别">
+  </div>
+  <div class="form-group">
+  <label for="txt_statu">描述</label>
+  <input type="text" name="txt_statu" class="form-control" id="txt_statu" placeholder="状态">
+  </div>
+ </div>
+ <div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+  <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>
+ </div>
+ </div>
+ </div>
+ </div>
 </body>
+</html>

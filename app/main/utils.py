@@ -28,8 +28,8 @@ FROM
 WHERE
     OWNER = '%s'
 AND TABLE_NAME = '%s'
-""" % (owner, table)
-    return db.query(sql)
+""" % (owner.upper(), table.upper())
+    return dict(db.query(sql))
 
 def get_users(db):
     sql = "select username from all_users"
@@ -38,3 +38,11 @@ def get_users(db):
         return [i[0] if i else None for i in users]
     else:
         return None
+
+
+if __name__ == "__main__":
+    import re
+    sql = "JWDN.ACCIDENT T1 left join test t2 on t1.sgdh=t2.sgdh"
+    match_table = re.compile("(\S+) ([t|T]\d+) ")
+    rs = match_table.findall(sql)
+    print({j.lower(): i for i,j in rs})

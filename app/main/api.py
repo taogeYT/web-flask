@@ -1,10 +1,14 @@
 from flask import Blueprint, request, jsonify, g
 from py_db import connection
 import datetime
+import re
+import json
 from app.models import Dsn
-from app.main.utils import get_users, get_tables
+from app.models import TaskConfig
+from app.main.utils import get_users, get_tables, get_comments
 from collections import defaultdict
 api = Blueprint('api', __name__, url_prefix='/api')
+_match_table = re.compile("(\S+) ([t|T]\d+) ")
 
 @api.route("/connections", methods=["POST"])
 def db_connect_test():
@@ -53,11 +57,11 @@ def get_connection_tables(name, user):
         tables = get_tables(user, db)
     return jsonify(tables=tables)
 
-@api.route("/tasks", methods=["POST"])
+@api.route("/tasks/dsn", methods=["POST"])
 def get_form():
     try:
-        src = '-'.join([request.form['srcdsn'], request.form['srctable']])
-        dst = '-'.join([request.form['dstdsn'], request.form['dsttable']])
+        src = '-'.join([request.form['srcdsn'], request.form['srcuser'], request.form['srctable']])
+        dst = '-'.join([request.form['dstdsn'], request.form['dstuser'], request.form['dsttable']])
         print(src, dst)
         outdate = datetime.datetime.today() + datetime.timedelta(days=1)
         resp = jsonify(result="success")
@@ -67,19 +71,43 @@ def get_form():
         resp = jsonify(result="fail: %s" % e)
     return resp
 
+@api.route("/mapping", methods=["GET"])
+def get_mapping():
+    dst_tab_name = g.__dst__[2]
+    with connection(g.__dst__[0]) as db:
+        db.dict_query("select * from %s where rownum <1" % dst_tab_name)
+        columns = db.columns
+    rs = {i.upper(): "" for i in columns}
+    rs["tableName"] = "{} {} ".format(g.__src__[2], "t1")
+    return jsonify(rs)
+
 @api.route("/fields", methods=["GET"])
 def get_fields():
-    with connection(g.__dst__[0]) as db:
-        print(g.__dst__[0])
-        db.dict_query("select * from %s where rownum <1" % g.__dst__[1])
-        columns = db.columns
-    return jsonify({i: "" for i in columns})
+    tmp = request.args.get("tableName")
+    print(tmp)
+    tab_name = tmp if tmp else "{} {}".format(g.__src__[2], "t1")
+    with connection(g.__src__[0], debug=True) as db:
+        sql = "select * from %s where rownum<1" % tab_name
+        db.dict_query(sql)
+        # columns = db.columns
+        res = _match_table.findall(sql)
+        tables = {j.lower(): i for i,j in res}
+        user, name = g.__src__[1], g.__src__[2]
+        comments = {}
+        print(tables)
+        for i in tables:
+            name = tab_name = tables[i]
+            db.dict_query(sql)
+            print(user, name)
+            com_tmp = {"{}.{}".format(i, k): v for k, v in get_comments(user, name, db).items()}
+            comments.update(com_tmp)
+    return jsonify(comments)
 
 @api.route("/datas", methods=["GET"])
 def get_datas():
     with connection(g.__src__[0]) as db:
         print(g.__src__[0])
-        rs = db.dict_query("select * from %s where fssj is not null" % g.__src__[1])
+        rs = db.dict_query("select * from %s where fssj is not null" % "{} {}".format(g.__src__[2], "t1"))
     dict_resp = defaultdict(list)
     for r in rs:
         for i in db.columns:
@@ -90,6 +118,20 @@ def get_datas():
 def get_a_data(name):
     with connection(g.__src__[0]) as db:
         print(g.__src__[0])
-        rs = db.query("select %s from %s where fssj is not null and rownum<5" % (name, g.__src__[1]))
+        rs = db.query("select %s from %s where fssj is not null and rownum<5" % (name, "{} {}".format(g.__src__[2], "t1")))
     list_resp = [i[0] for i in rs]
     return jsonify(list_resp)
+
+@api.route("/tasks", methods=["POST"])
+def create_task():
+    # print(request.data)
+    config = request.json
+    name = config.pop('taskName')
+    src_tab = config.pop('tableName')
+    dst_tab = g.__dst__[2]
+    if TaskConfig.query.filter_by(config=json.dumps(config)):
+        return TaskConfig.query.filter_by(config='fail').first_or_404()
+    else:
+        task = TaskConfig(name=name, src=g.__src__[0], dst=g.__dst__[0], config=json.dumps(config), src_tab=src_tab, dst_tab=dst_tab)
+        task.save()
+    return 'ok'

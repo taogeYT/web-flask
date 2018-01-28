@@ -3,40 +3,39 @@
 <head>
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/vue.min.js"></script>
+    <!-- <script src="/static/js/bootstrap.min.js"></script> -->
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <style type="text/css">
     *{
         padding: 0;
         margin: 0;
     }
-    /*.col-lg-* div{padding:0;marign:0;}*/
     [class*="col-lg-"] {
-    padding: 0 !important;
-    margin: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
-    .table{height:300px;border:1px solid #999;}
+    .table{
+        height:300px;border:1px solid #999;
+        /*table-layout:fixed;*/
+    }
     .td-data
     {
-        white-space:nowrap;/*空白字符是否换行*/
-        width:12em;
+        word-wrap:break-word;word-break:break-all;
+        /*空白字符是否换行*/
+        white-space:nowrap;
+        width:7em;
         /*width:100%;*/
         overflow:hidden;
         /*边框样式*/
         /*border:1px solid #000000;*/
-        /*元素的尺寸大小*/
+        /*字体大小*/
         font-size: 15px;
         text-overflow:ellipsis;
     }
-    .test2
+    .td-columns
     {
-        /*空白字符是否换行*/
         white-space:nowrap;
-        /*width:6em;*/
-        /*width:100%;*/
         overflow:hidden;
-        /*边框样式*/
-        /*border:1px solid #000000;*/
-        /*元素的尺寸大小*/
         font-size: 10px;
     }
     .td-data:hover
@@ -44,37 +43,40 @@
         text-overflow:inherit;
         overflow: scroll;
         display:table-row;
-        }
-    </style>
+    }
+</style>
 
-    <script>
-        $(function() {
-        // var datas;
-        // function getDatas (callback) {
-        //     $.ajax({
-        //         url: "/api/datas",
-        //         type: "GET"
-        //     }).done(function (msg) {
-        //         callback(msg);
-        //     });
-        // }
-        // getDatas(function (msg) {
-        //     datas = msg;
-        // });
-        function initVM(msg) {
+<script>
+    $(function() {
+        function initVM(msg, callback) {
             var vm = new Vue({
                 el: '#vm',
                 data: msg,
                 methods:{
-                    click: function () {}
+                    click: function () {
+                        $.ajax({
+                            url: '/api/tasks',
+                            contentType: "application/json; charset=UTF-8",
+                            type: "POST",
+                            data: JSON.stringify(this.$data)
+                        }).done(function (msg) {
+                            location.assign("/task/home")
+                        }).fail(function () {
+                            alert(msg);
+                        });
+                    }
                 }
             });
+            callback(vm);
         }
+        var vm;
         $.ajax({
-            url: "/api/fields",
+            url: "/api/mapping",
             type: "GET"
         }).done(function (msg) {
-            initVM(msg);
+            initVM(msg, function(val){
+                vm = val;
+            });
         });
 
         $("input.src-field-list").change(function () {
@@ -91,71 +93,88 @@
                 $("#data3"+name).text(msg[3])
             });
         });
+         $.ajax({
+                url: "/api/fields",
+                type: "GET",
+            }).done(function (msg) {
+                for (var k in msg){$("#itemlist").append('<option label='+msg[k]+'>'+k+"</option>")};
+        });
+        $("#srcTableRefresh").click(function () {
+            $.ajax({
+                url: "/api/fields",
+                type: "GET",
+                data: {tableName: vm.tableName}
+            }).done(function (msg) {
+                $("#itemlist>option").remove()
+                for (var k in msg){$("#itemlist").append('<option label='+msg[k]+'>'+k+"</option>")};
+            });
+        });
 
     });
 </script>
 </head>
 <body>
-
     <div class="container">
         <h1>Etl Tools</h1>
         <datalist id="itemlist">
-            {% for i,v in t1_columns %}
-            <option>{{ v }}</option>
-            {% endfor %}
+<!--             {% for k,v in src_columns.items() %}
+            <option label={{v}}>{{k}}</option>
+            {% endfor %} -->
         </datalist>
-        <div class="row">
+        <div id="vm" class="row">
             <div class="col-lg-12">
                 <div class="input-group">
+                    <span class="input-group-addon">任务名称</span>
+                    <input v-model="taskName" type="text" class="col-lg-3 form-control">
+                    <span class="input-group-addon">table:</span>
+                    <input v-model="tableName" type="text" class="col-lg-9 form-control">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">Go!</button>
+                        <button id="srcTableRefresh" class="btn btn-default" type="button">Go!</button>
                     </span>
-                    <input type="text" class="form-control">
                 </div>
             </div>
             <div class="col-lg-12"><br></div>
 
-                <div id="vm" class="col-lg-3" style="padding: 0;">
-                    <table class="table text-nowrap table-condensed table-hover table-bordered">
-                        <tbody id='table1'>
-                            {% for name in columns %}
-                            <tr id={{'field'+name}}>
-                                <td >
-                                    <div class="test2 input-group input-group-sm">
-                                        <span class="input-group-addon">test</span>
-                                        <label class="form-control" for={{"input"+name}}>{{name}}</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="test2 input-group input-group-sm">
-                                        <span class="input-group-addon">test</span>
-                                        <input v-model={{name}} id={{'input'+name}} class="src-field-list form-control" type="text" list="itemlist">
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="col-lg-9" style="overflow:auto;" style="padding: 0;">
-                    <table class="table text-nowrap table-condensed table-hover table-bordered">
-                        <tbody id='table2'>
-                            {% for name in columns %}
-                            <tr>
-                                <td><div id={{'data0'+name}} class="td-data">1111111111111111111111</div></td>
-                                <td><div id={{'data1'+name}} class="td-data">aaaaaaaaaaaaaaa</div></td>
-                                <td><div id={{'data2'+name}} class="td-data">ddddd</div></td>
-                                <td><div id={{'data3'+name}} class="td-data">aaa</div></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="col-lg-6" style="padding: 0;">
+                <table class="table text-nowrap table-condensed table-hover table-bordered">
+                    <tbody id='table1'>
+                        {% for name,value in columns.items() %}
+                        <tr id={{'field'+name}}>
+                            <td>
+                                <div class="td-columns input-group input-group-sm">
+                                    <label title={{value}} class="form-control" for={{"input"+name}}>{{name}}</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="td-columns input-group input-group-sm">
+                                    <!-- <span class="input-group-addon">test</span> -->
+                                    <input v-model={{name}} id={{'input'+name}} class="src-field-list form-control" type="text" list="itemlist">
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
 
-
+            <div class="col-lg-6" style="padding: 0;">
+                <table class="table text-nowrap table-condensed table-hover table-bordered">
+                    <tbody id='table2'>
+                        {% for name in columns %}
+                        <tr>
+                            <td><div id={{'data0'+name}} class="td-data">null</div></td>
+                            <td><div id={{'data1'+name}} class="td-data">null</div></td>
+                            <td><div id={{'data2'+name}} class="td-data">null</div></td>
+                            <td><div id={{'data3'+name}} class="td-data">null</div></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class='col-12'>
+                <button v-on="click:click" class="form-control">确定</button>
+            </div>
+        </div>
     </div>
-
 </body>
 </html>

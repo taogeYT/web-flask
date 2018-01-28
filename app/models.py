@@ -28,28 +28,31 @@ class Dsn(db.Model):
         if not cookie:
             return None
         else:
-            return cookie.split('-')
+            rs = cookie.split('-')
+            if len(rs)==3:
+                return rs
+            else:
+                None
 
-    def signin(self, response, max_age=86400):
-        expires = str(int(time.time() + max_age))
-        s = '%s-%s-%s-%s' % (self.id, self.password, expires, current_app.config['COOKIE_KEY'])
-        L = [self.id, expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]
-        response.set_cookie(current_app.config['COOKIE_NAME'], '-'.join(L), max_age, httponly=True)
-        return response
+    # def signin(self, response, max_age=86400):
+    #     expires = str(int(time.time() + max_age))
+    #     s = '%s-%s-%s-%s' % (self.id, self.password, expires, current_app.config['COOKIE_KEY'])
+    #     L = [self.id, expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]
+    #     response.set_cookie(current_app.config['COOKIE_NAME'], '-'.join(L), max_age, httponly=True)
+    #     return response
 
 
-class User(db.Model):
-    __tablename__ = 'users'
+class TaskConfig(db.Model):
+    __tablename__ = 'task_config'
     id = db.Column(db.String(50), nullable=False, primary_key=True, default=next_id)
-    email = db.Column(db.String(50), nullable=False, unique=True, index=True)
-    password = db.Column(db.String(50), nullable=False)
-    admin = db.Column(db.Boolean, nullable=False, default=False)
     name = db.Column(db.String(50), nullable=False, unique=True, index=True)
-    image = db.Column(db.String(500), nullable=False, default='/static/img/user.png')
+    src = db.Column(db.String(50), nullable=False)
+    dst = db.Column(db.String(50), nullable=False)
+    config = db.Column(db.Text(), nullable=False)
+    src_tab = db.Column(db.String(50), nullable=False)
+    dst_tab = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.Float, nullable=False, default=time.time)
 
-    # def __init__(self, **kwargs):
-    #     super().__init__(**kwargs)
-    #     db.session.add(self)
-    #     db.session.commit()
-# db.create_all()
+    def save(self):
+        db.session.add(self)
+        db.session.commit()

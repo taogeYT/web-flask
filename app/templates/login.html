@@ -186,17 +186,21 @@
             checkNotNull('user')
             checkNotNull('table')
             var srcdsn = vm1.dsn.trim()
-            var srctable = vm1.user.trim() + '.' + vm1.table.trim()
+            var srcuser = vm1.user.trim()
+            var srctable = vm1.table.trim()
             var dstdsn = vm2.dsn.trim()
-            var dsttable = vm2.user.trim() + '.' + vm2.table.trim()
+            var dstuser = vm2.user.trim()
+            var dsttable = vm2.table.trim()
             var data = {
                 srcdsn: srcdsn,
+                srcuser: srcuser,
                 srctable: srctable,
                 dstdsn: dstdsn,
+                dstuser: dstuser,
                 dsttable: dsttable
             };
             $.ajax({
-                url: "/api/tasks",
+                url: "/api/tasks/dsn",
                 type: "POST",
                 data: data,
                 success: function (msg) {

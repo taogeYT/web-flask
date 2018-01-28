@@ -1,4 +1,4 @@
-from flask import request, current_app, g
+from flask import request, g
 from app.models import Dsn
 
 
