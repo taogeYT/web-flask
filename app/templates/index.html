@@ -14,8 +14,37 @@
         padding: 0 !important;
         margin: 0 !important;
     }
+    body,html,.main-wrapper{
+    height: 100%;
+    overflow: hidden;
+    font-family: Microsoft YaHei;
+  }
+    .main-wrapper{
+        background: url('/static/img/bg3.jpg') center center/100% 100% no-repeat;
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flex;
+        display: -o-flex;
+        display: flex;
+    }
+    .main-container{
+        align-self: center;
+        width: 100%;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        moz-user-select: -moz-none;
+        -o-user-select: none;
+        -khtml-user-select: none;
+    }
+/*    .form-control{
+        font-family: Microsoft YaHei;
+        font-size: 15px;
+    }*/
     .table{
         height:300px;border:1px solid #999;
+        color: #fff;
         /*table-layout:fixed;*/
     }
     .td-data
@@ -93,11 +122,11 @@
                 $("#data3"+name).text(msg[3])
             });
         });
-         $.ajax({
-                url: "/api/fields",
-                type: "GET",
-            }).done(function (msg) {
-                for (var k in msg){$("#itemlist").append('<option label='+msg[k]+'>'+k+"</option>")};
+        $.ajax({
+            url: "/api/fields",
+            type: "GET",
+        }).done(function (msg) {
+            for (var k in msg){$("#itemlist").append('<option label='+msg[k]+'>'+k+"</option>")};
         });
         $("#srcTableRefresh").click(function () {
             $.ajax({
@@ -114,9 +143,10 @@
 </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Etl Tools</h1>
-        <datalist id="itemlist">
+    <div class="main-wrapper">
+        <div class="container">
+            <h1>Etl Tools</h1>
+            <datalist id="itemlist">
 <!--             {% for k,v in src_columns.items() %}
             <option label={{v}}>{{k}}</option>
             {% endfor %} -->
@@ -176,5 +206,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

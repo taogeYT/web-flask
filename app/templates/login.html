@@ -31,9 +31,9 @@
                     <span class="name-help help-block"></span>
                     <datalist id="namelist">
                     </datalist>
-                    <label>数据库驱动名称</label>
-                    <input v-model="driver" class="driver-name form-control" name="srcdriver" type="text" placeholder="Driver name">
-                    <span class="driver-help help-block"></span>
+<!--                     <label>数据库驱动名称</label>
+                    <input v-model="driver" class="driver-name form-control" name="srcdriver" type="text" placeholder="Driver name"> -->
+                    <!-- <span class="driver-help help-block"></span> -->
                     <label>数据库配置</label>
                     <input v-model="dsn" class="dsn-config form-control" id="srcdsn" type="text" placeholder="DSN config">
                     <span class="dsn-help help-block"></span>
@@ -58,9 +58,9 @@
                     <label class="label-control">数据库名称</label>
                     <input v-model="name" class="con-names form-control" type="text" list="namelist" placeholder="Connection name">
                     <span class="name-help help-block"></span>
-                    <label class="label-control">数据库驱动名称</label>
-                    <input v-model="driver" class="driver-name form-control" name="dstdriver" type="text" placeholder="Driver name">
-                    <span class="driver-help help-block"></span>
+<!--                     <label class="label-control">数据库驱动名称</label>
+                    <input v-model="driver" class="driver-name form-control" name="dstdriver" type="text" placeholder="Driver name"> -->
+                    <!-- <span class="driver-help help-block"></span> -->
                     <label class="label-control">数据库配置</label>
                     <input v-model="dsn" class="dsn-config form-control" id="dstdsn" type="text" placeholder="DSN config">
                     <span class="dsn-help help-block"></span>
@@ -95,7 +95,7 @@
                 data: {
                     name: '',
                     id: '',
-                    driver: '',
+                    // driver: '',
                     dsn: '',
                     user: '',
                     table: ''
@@ -112,6 +112,8 @@
                                         $(id).find("datalist.user-names").append('<option>' + i + "</option>")
                                     }
                                     $(id).find(".init-hidden").show()
+                                    vm.user = msg.current
+                                    getTables(vm)
                                 }else {
                                     alert(msg.result);
                                 }
@@ -162,7 +164,7 @@
                 success: function (msg) {
                     for (var i of msg.tables) {
                         $(vm.$el).find("datalist.table-names").append('<option>' + i + "</option>")
-            }}});
+                    }}});
         }
         $(".user-names").change(function () {
             var id = $(this).parent().parent().attr('id')
@@ -215,7 +217,7 @@
         });
         $('input').on('focus', function() {
           $(this).parent().removeClass('has-error');
-        });
+      });
     });
 </script>
 </html>

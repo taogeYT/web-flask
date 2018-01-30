@@ -9,9 +9,11 @@ from app.main.utils import get_users, get_tables, get_comments
 from collections import defaultdict
 api = Blueprint('api', __name__, url_prefix='/api')
 _match_table = re.compile("(\S+) ([t|T]\d+) ")
+_match_user = re.compile("://(\w+):")
 
 @api.route("/connections", methods=["POST"])
 def db_connect_test():
+    # print(request.form)
     try:
         name = request.form['name'].strip()
         if not name:
@@ -19,11 +21,11 @@ def db_connect_test():
         driver = request.form['driver'].strip()
         dsn = request.form['dsn'].strip()
         if not dsn:
-            dsn = Dsn.query.filter_by(name=name).first()
-            if not dsn:
+            dsncfg = Dsn.query.filter_by(name=name).first()
+            if not dsncfg:
                 raise Exception("无效的数据库连接")
             else:
-                dsn = dsn.dsn
+                dsn = dsncfg.dsn
         print(dsn)
         with connection(dsn) as db:
             db.connect.connect()
@@ -32,7 +34,8 @@ def db_connect_test():
         return jsonify(result="fail: %s" % reason)
     if not Dsn.query.filter_by(name=name).first():
         Dsn(name=name, driver=driver, dsn=dsn)
-    return jsonify(result="success", users=users)
+    current_user = _match_user.findall(dsn)[0]
+    return jsonify(result="success", users=users, current=current_user.upper())
 
 @api.route("/connections", methods=["GET"])
 def get_connection_name():
@@ -129,9 +132,9 @@ def create_task():
     name = config.pop('taskName')
     src_tab = config.pop('tableName')
     dst_tab = g.__dst__[2]
-    if TaskConfig.query.filter_by(config=json.dumps(config)):
+    if TaskConfig.query.filter_by(config=json.dumps(config)).first():
         return TaskConfig.query.filter_by(config='fail').first_or_404()
     else:
         task = TaskConfig(name=name, src=g.__src__[0], dst=g.__dst__[0], config=json.dumps(config), src_tab=src_tab, dst_tab=dst_tab)
         task.save()
-    return 'ok'
+        return 'ok'
