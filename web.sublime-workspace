@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"cu",
+				"current_app\tinstance"
+			],
+			[
+				"set",
+				"set_trace\tfunction"
+			],
+			[
 				"co",
 				"columns"
 			],
@@ -488,29 +496,26 @@
 	[
 		"/C/Users/Administrator/Desktop/web-flask",
 		"/C/Users/Administrator/Desktop/web-flask/app",
-		"/C/Users/Administrator/Desktop/web-flask/app/main",
-		"/C/Users/Administrator/Desktop/web-flask/app/static",
-		"/C/Users/Administrator/Desktop/web-flask/app/templates",
-		"/C/Users/Administrator/Desktop/py_proj/flask_project",
-		"/C/Users/Administrator/Desktop/py_proj/flask_project/Flask-参考",
-		"/C/Users/Administrator/Desktop/src/etl-web",
-		"/C/Users/Administrator/Desktop/src/etl-web/app",
-		"/C/Users/Administrator/Desktop/src/etl-web/app/templates"
+		"/C/Users/Administrator/Desktop/src/etl-web"
 	],
 	"file_history":
 	[
+		"/C/Users/Administrator/Desktop/web-flask/app/main/page.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/main/api.py",
+		"/C/Users/Administrator/Desktop/web-flask/config.py",
+		"/C/Users/Administrator/Desktop/web-flask/run.py",
+		"/C/Users/Administrator/Desktop/web-flask/app/main/__init__.py",
+		"/C/Users/Administrator/Desktop/web-flask/app/__init__.py",
+		"/C/Users/Administrator/Desktop/web-flask/app/middleware.py",
+		"/C/ProgramData/Anaconda3/lib/site-packages/py_db-1.0.2-py3.6.egg",
 		"/C/Users/Administrator/Desktop/web-flask/app/models.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates/login.html",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates/index.html",
 		"/C/Users/Administrator/Desktop/web-flask/app/main/utils.py",
-		"/C/Users/Administrator/Desktop/web-flask/app/main/page.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates/test.html",
 		"/C/Users/Administrator/Desktop/py_proj/flask_project/Flask-参考/mblog-Flask-master/app/models.py",
-		"/C/Users/Administrator/Desktop/web-flask/app/middleware.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates/home.html",
 		"/C/Users/Administrator/Desktop/src/etl-web/app/templates/table.html",
-		"/C/Users/Administrator/Desktop/web-flask/app/__init__.py",
 		"/C/Users/Administrator/Desktop/web-flask/sftp-config.json",
 		"/C/Users/Administrator/Desktop/web_old/app/main/api.py",
 		"/C/Users/Administrator/Desktop/web/app/api/api.py",
@@ -622,11 +627,7 @@
 		"/C/Users/acer/Desktop/perp-scripts/zdry/util/my_oracle_utility.py",
 		"/C/Users/acer/Desktop/src/py_etl/docs/example/etl/script/start.sh",
 		"/C/Users/acer/Desktop/src/py_etl/docs/example/etl/task/work.py",
-		"/C/Users/acer/Desktop/src/py_etl/docs/example/script/start.sh",
-		"/C/Users/acer/Desktop/src/py_etl/docs/example/config.py",
-		"/C/Users/acer/Desktop/src/py_etl/docs/example/task/work.py",
-		"/C/Users/acer/Desktop/src/py_etl/py_etl/app.py",
-		"/C/Users/acer/Desktop/src/py_etl/py_etl/utils.py"
+		"/C/Users/acer/Desktop/src/py_etl/docs/example/script/start.sh"
 	],
 	"find":
 	{
@@ -644,6 +645,8 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"print",
+			"field",
 			"driver",
 			"_match_table",
 			"compile",
@@ -771,7 +774,7 @@
 		[
 			[
 				"",
-				"C:\\Users\\Administrator\\Desktop\\src\\demo\\demo.sublime-project"
+				"C:\\Users\\Administrator\\Desktop\\src\\py_db\\py_db.sublime-project"
 			]
 		],
 		"width": 380.0

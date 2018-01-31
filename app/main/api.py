@@ -1,4 +1,5 @@
-from flask import Blueprint, request, jsonify, g
+from flask import Blueprint, request, jsonify, g, current_app
+from collections import defaultdict
 from py_db import connection
 import datetime
 import re
@@ -6,14 +7,14 @@ import json
 from app.models import Dsn
 from app.models import TaskConfig
 from app.main.utils import get_users, get_tables, get_comments
-from collections import defaultdict
+
 api = Blueprint('api', __name__, url_prefix='/api')
 _match_table = re.compile("(\S+) ([t|T]\d+) ")
 _match_user = re.compile("://(\w+):")
 
+
 @api.route("/connections", methods=["POST"])
 def db_connect_test():
-    # print(request.form)
     try:
         name = request.form['name'].strip()
         if not name:
@@ -26,7 +27,7 @@ def db_connect_test():
                 raise Exception("无效的数据库连接")
             else:
                 dsn = dsncfg.dsn
-        print(dsn)
+        current_app.logger.info(dsn)
         with connection(dsn) as db:
             db.connect.connect()
             users = get_users(db)
@@ -87,21 +88,17 @@ def get_mapping():
 @api.route("/fields", methods=["GET"])
 def get_fields():
     tmp = request.args.get("tableName")
-    print(tmp)
     tab_name = tmp if tmp else "{} {}".format(g.__src__[2], "t1")
-    with connection(g.__src__[0], debug=True) as db:
+    with connection(g.__src__[0]) as db:
         sql = "select * from %s where rownum<1" % tab_name
         db.dict_query(sql)
-        # columns = db.columns
         res = _match_table.findall(sql)
         tables = {j.lower(): i for i,j in res}
         user, name = g.__src__[1], g.__src__[2]
         comments = {}
-        print(tables)
         for i in tables:
             name = tab_name = tables[i]
             db.dict_query(sql)
-            print(user, name)
             com_tmp = {"{}.{}".format(i, k): v for k, v in get_comments(user, name, db).items()}
             comments.update(com_tmp)
     return jsonify(comments)
@@ -109,7 +106,6 @@ def get_fields():
 @api.route("/datas", methods=["GET"])
 def get_datas():
     with connection(g.__src__[0]) as db:
-        print(g.__src__[0])
         rs = db.dict_query("select * from %s where fssj is not null" % "{} {}".format(g.__src__[2], "t1"))
     dict_resp = defaultdict(list)
     for r in rs:
@@ -120,14 +116,12 @@ def get_datas():
 @api.route("/datas/<name>", methods=["GET"])
 def get_a_data(name):
     with connection(g.__src__[0]) as db:
-        print(g.__src__[0])
         rs = db.query("select %s from %s where fssj is not null and rownum<5" % (name, "{} {}".format(g.__src__[2], "t1")))
     list_resp = [i[0] for i in rs]
     return jsonify(list_resp)
 
 @api.route("/tasks", methods=["POST"])
 def create_task():
-    # print(request.data)
     config = request.json
     name = config.pop('taskName')
     src_tab = config.pop('tableName')
