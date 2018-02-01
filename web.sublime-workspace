@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"cur",
+				"current_app\tinstance"
+			],
+			[
 				"cu",
 				"current_app\tinstance"
 			],
@@ -343,6 +347,33 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "app/main/api.py",
+			"settings":
+			{
+				"buffer_size": 5343,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/templates/index.html",
+			"settings":
+			{
+				"buffer_size": 8490,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/templates/login.html",
+			"settings":
+			{
+				"buffer_size": 9195,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "Packages/Python/Python.sublime-build",
 	"build_system_choices":
@@ -496,24 +527,27 @@
 	[
 		"/C/Users/Administrator/Desktop/web-flask",
 		"/C/Users/Administrator/Desktop/web-flask/app",
+		"/C/Users/Administrator/Desktop/web-flask/app/main",
+		"/C/Users/Administrator/Desktop/web-flask/app/templates",
+		"/C/Users/Administrator/Desktop/py_proj/flask_project",
 		"/C/Users/Administrator/Desktop/src/etl-web"
 	],
 	"file_history":
 	[
+		"/C/Users/Administrator/Desktop/web-flask/app/main/utils.py",
+		"/C/Users/Administrator/Desktop/py_proj/flask_project/Flask-参考/mblog-Flask-master/app/models.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/main/page.py",
-		"/C/Users/Administrator/Desktop/web-flask/app/main/api.py",
+		"/C/Users/Administrator/Desktop/web-flask/app/middleware.py",
 		"/C/Users/Administrator/Desktop/web-flask/config.py",
+		"/C/Users/Administrator/Desktop/web-flask/app/main/api.py",
 		"/C/Users/Administrator/Desktop/web-flask/run.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/main/__init__.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/__init__.py",
-		"/C/Users/Administrator/Desktop/web-flask/app/middleware.py",
 		"/C/ProgramData/Anaconda3/lib/site-packages/py_db-1.0.2-py3.6.egg",
 		"/C/Users/Administrator/Desktop/web-flask/app/models.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates/login.html",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates/index.html",
-		"/C/Users/Administrator/Desktop/web-flask/app/main/utils.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates/test.html",
-		"/C/Users/Administrator/Desktop/py_proj/flask_project/Flask-参考/mblog-Flask-master/app/models.py",
 		"/C/Users/Administrator/Desktop/web-flask/app/templates/home.html",
 		"/C/Users/Administrator/Desktop/src/etl-web/app/templates/table.html",
 		"/C/Users/Administrator/Desktop/web-flask/sftp-config.json",
@@ -645,6 +679,8 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"itemlist",
+			"set",
 			"print",
 			"field",
 			"driver",
@@ -686,8 +722,119 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "app/main/api.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5343,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2023,
+								2023
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 786.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/templates/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8490,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3193,
+								3193
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1755.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "app/templates/login.html",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 9195,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7035,
+								7035
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2793.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		}
 	],

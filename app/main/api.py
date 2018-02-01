@@ -11,7 +11,8 @@ from app.main.utils import get_users, get_tables, get_comments
 api = Blueprint('api', __name__, url_prefix='/api')
 _match_table = re.compile("(\S+) ([t|T]\d+) ")
 _match_user = re.compile("://(\w+):")
-
+def outdate(n=1):
+    datetime.datetime.today() + datetime.timedelta(days=n)
 
 @api.route("/connections", methods=["POST"])
 def db_connect_test():
@@ -54,11 +55,17 @@ def get_connection_config(name):
 
 @api.route("/connections/<name>/<user>", methods=["GET"])
 def get_connection_tables(name, user):
-    dsn = Dsn.query.filter_by(name=name).first()
-    if not dsn:
-        return jsonify(driver=None, dsn=dsn)
-    with connection(dsn.dsn) as db:
-        tables = get_tables(user, db)
+    if name == user == 'a':
+        dsn, user = g.__src__[0], g.__src__[1]
+        current_app.logger.debug(user)
+        with connection(dsn) as db:
+            tables = get_tables(user, db)
+    else:
+        dsn = Dsn.query.filter_by(name=name).first()
+        if not dsn:
+            return jsonify(driver=None, dsn=dsn)
+        with connection(dsn.dsn) as db:
+            tables = get_tables(user, db)
     return jsonify(tables=tables)
 
 @api.route("/tasks/dsn", methods=["POST"])
@@ -66,11 +73,9 @@ def get_form():
     try:
         src = '-'.join([request.form['srcdsn'], request.form['srcuser'], request.form['srctable']])
         dst = '-'.join([request.form['dstdsn'], request.form['dstuser'], request.form['dsttable']])
-        print(src, dst)
-        outdate = datetime.datetime.today() + datetime.timedelta(days=1)
         resp = jsonify(result="success")
-        resp.set_cookie('src', src, expires=outdate)
-        resp.set_cookie('dst', dst, expires=outdate)
+        resp.set_cookie('src', src, expires=outdate())
+        resp.set_cookie('dst', dst, expires=outdate())
     except Exception as e:
         resp = jsonify(result="fail: %s" % e)
     return resp
@@ -82,18 +87,21 @@ def get_mapping():
         db.dict_query("select * from %s where rownum <1" % dst_tab_name)
         columns = db.columns
     rs = {i.upper(): "" for i in columns}
-    rs["tableName"] = "{} {} ".format(g.__src__[2], "t1")
+    rs["tableName"] = g.__src__[2]
     return jsonify(rs)
 
 @api.route("/fields", methods=["GET"])
 def get_fields():
     tmp = request.args.get("tableName")
-    tab_name = tmp if tmp else "{} {}".format(g.__src__[2], "t1")
-    with connection(g.__src__[0]) as db:
+    tab_name = tmp if tmp else g.__src__[2]
+    g.__src__[2] = tab_name
+    src = '-'.join(g.__src__)
+    with connection(g.__src__[0], debug=True) as db:
         sql = "select * from %s where rownum<1" % tab_name
+        current_app.logger.info(sql)
         db.dict_query(sql)
         res = _match_table.findall(sql)
-        tables = {j.lower(): i for i,j in res}
+        tables = {j.lower(): i for i,j in res} # if res else {'t1': g.__src__[2]}
         user, name = g.__src__[1], g.__src__[2]
         comments = {}
         for i in tables:
@@ -101,12 +109,17 @@ def get_fields():
             db.dict_query(sql)
             com_tmp = {"{}.{}".format(i, k): v for k, v in get_comments(user, name, db).items()}
             comments.update(com_tmp)
-    return jsonify(comments)
+        else:
+            if not comments:
+                comments = get_comments(user, name, db)
+    resp = jsonify(comments)
+    resp.set_cookie('src', src, expires=outdate())
+    return resp
 
 @api.route("/datas", methods=["GET"])
 def get_datas():
     with connection(g.__src__[0]) as db:
-        rs = db.dict_query("select * from %s where fssj is not null" % "{} {}".format(g.__src__[2], "t1"))
+        rs = db.dict_query("select * from %s where fssj is not null" % g.__src__[2])
     dict_resp = defaultdict(list)
     for r in rs:
         for i in db.columns:
@@ -116,7 +129,7 @@ def get_datas():
 @api.route("/datas/<name>", methods=["GET"])
 def get_a_data(name):
     with connection(g.__src__[0]) as db:
-        rs = db.query("select %s from %s where fssj is not null and rownum<5" % (name, "{} {}".format(g.__src__[2], "t1")))
+        rs = db.query("select %s from %s where fssj is not null and rownum<5" % (name, g.__src__[2]))
     list_resp = [i[0] for i in rs]
     return jsonify(list_resp)
 

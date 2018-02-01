@@ -11,7 +11,7 @@ FROM
     ALL_TABLES
 WHERE
     OWNER = '%s'
-""" % owner
+""" % owner.upper()
     tables = db.query(sql)
     if tables:
         return [i[0] if i else None for i in tables]

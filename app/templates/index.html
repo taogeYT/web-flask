@@ -15,10 +15,10 @@
         margin: 0 !important;
     }
     body,html,.main-wrapper{
-    height: 100%;
-    overflow: hidden;
-    font-family: Microsoft YaHei;
-  }
+        height: 100%;
+        overflow: hidden;
+        font-family: Microsoft YaHei;
+    }
     .main-wrapper{
         background: url('/static/img/bg3.jpg') center center/100% 100% no-repeat;
         display: -webkit-flex;
@@ -41,171 +41,184 @@
 /*    .form-control{
         font-family: Microsoft YaHei;
         font-size: 15px;
-    }*/
-    .table{
-        height:300px;border:1px solid #999;
-        color: #fff;
-        /*table-layout:fixed;*/
-    }
-    .td-data
-    {
-        word-wrap:break-word;word-break:break-all;
-        /*空白字符是否换行*/
-        white-space:nowrap;
-        width:7em;
-        /*width:100%;*/
-        overflow:hidden;
-        /*边框样式*/
-        /*border:1px solid #000000;*/
-        /*字体大小*/
-        font-size: 15px;
-        text-overflow:ellipsis;
-    }
-    .td-columns
-    {
-        white-space:nowrap;
-        overflow:hidden;
-        font-size: 10px;
-    }
-    .td-data:hover
-    {
-        text-overflow:inherit;
-        overflow: scroll;
-        display:table-row;
-    }
-</style>
-
-<script>
-    $(function() {
-        function initVM(msg, callback) {
-            var vm = new Vue({
-                el: '#vm',
-                data: msg,
-                methods:{
-                    click: function () {
-                        $.ajax({
-                            url: '/api/tasks',
-                            contentType: "application/json; charset=UTF-8",
-                            type: "POST",
-                            data: JSON.stringify(this.$data)
-                        }).done(function (msg) {
-                            location.assign("/task/home")
-                        }).fail(function () {
-                            alert(msg);
-                        });
-                    }
-                }
-            });
-            callback(vm);
+        }*/
+        .table{
+            height:300px;border:1px solid #999;
+            color: #fff;
+            /*table-layout:fixed;*/
         }
-        var vm;
-        $.ajax({
-            url: "/api/mapping",
-            type: "GET"
-        }).done(function (msg) {
-            initVM(msg, function(val){
-                vm = val;
-            });
-        });
+        .td-data
+        {
+            word-wrap:break-word;word-break:break-all;
+            /*空白字符是否换行*/
+            white-space:nowrap;
+            width:7em;
+            /*width:100%;*/
+            overflow:hidden;
+            /*边框样式*/
+            /*border:1px solid #000000;*/
+            /*字体大小*/
+            font-size: 15px;
+            text-overflow:ellipsis;
+        }
+        .td-columns
+        {
+            white-space:nowrap;
+            overflow:hidden;
+            font-size: 10px;
+        }
+        .td-data:hover
+        {
+            text-overflow:inherit;
+            overflow: scroll;
+            display:table-row;
+        }
+    </style>
 
-        $("input.src-field-list").change(function () {
-            var name = $(this).attr("id").replace('input', '');
-            var field = $(this).val()
-            var url = "/api/datas/" + field;
+    <script>
+        $(function() {
+            function initVM(msg, callback) {
+                var vm = new Vue({
+                    el: '#vm',
+                    data: msg,
+                    methods:{
+                        click: function () {
+                            $.ajax({
+                                url: '/api/tasks',
+                                contentType: "application/json; charset=UTF-8",
+                                type: "POST",
+                                data: JSON.stringify(this.$data)
+                            }).done(function (msg) {
+                                location.assign("/task/home")
+                            }).fail(function () {
+                                alert(msg);
+                            });
+                        }
+                    }
+                });
+                callback(vm);
+            }
+            var vm;
             $.ajax({
-                url: url,
+                url: "/api/mapping",
                 type: "GET"
-            }).done(function (msg){
-                $("#data0"+name).text(msg[0])
-                $("#data1"+name).text(msg[1])
-                $("#data2"+name).text(msg[2])
-                $("#data3"+name).text(msg[3])
+            }).done(function (msg) {
+                initVM(msg, function(val){
+                    vm = val;
+                });
             });
-        });
-        $.ajax({
-            url: "/api/fields",
-            type: "GET",
-        }).done(function (msg) {
-            for (var k in msg){$("#itemlist").append('<option label='+msg[k]+'>'+k+"</option>")};
-        });
-        $("#srcTableRefresh").click(function () {
+            $.ajax({
+                url: "/api/connections/a/a",
+                type: "GET",
+                success: function (msg) {
+                    for (var i of msg.tables) {
+                        $("#tableNameList").append('<option>' + i + "</option>")
+            }}});
+
+            $("input.src-field-list").change(function () {
+                var name = $(this).attr("id").replace('input', '');
+                var field = $(this).val()
+                var url = "/api/datas/" + field;
+                $.ajax({
+                    url: url,
+                    type: "GET"
+                }).done(function (msg){
+                    $("#data0"+name).text(msg[0])
+                    $("#data1"+name).text(msg[1])
+                    $("#data2"+name).text(msg[2])
+                    $("#data3"+name).text(msg[3])
+                });
+            });
             $.ajax({
                 url: "/api/fields",
                 type: "GET",
-                data: {tableName: vm.tableName}
             }).done(function (msg) {
-                $("#itemlist>option").remove()
-                for (var k in msg){$("#itemlist").append('<option label='+msg[k]+'>'+k+"</option>")};
+                for (var k in msg){$("#t1NameList").append('<option label='+msg[k]+'>'+k+"</option>")};
             });
-        });
+            $("#srcTableRefresh").click(function () {
+                $.ajax({
+                    url: "/api/fields",
+                    type: "GET",
+                    data: {tableName: vm.tableName}
+                }).done(function (msg) {
+                    $("#t1NameList>option").remove()
+                    for (var k in msg){$("#t1NameList").append('<option label='+msg[k]+'>'+k+"</option>")};
+                });
+            });
 
-    });
-</script>
+        });
+    </script>
 </head>
 <body>
     <div class="main-wrapper">
         <div class="container">
             <h1>Etl Tools</h1>
-            <datalist id="itemlist">
-<!--             {% for k,v in src_columns.items() %}
-            <option label={{v}}>{{k}}</option>
-            {% endfor %} -->
-        </datalist>
-        <div id="vm" class="row">
-            <div class="col-lg-12">
-                <div class="input-group">
-                    <span class="input-group-addon">任务名称</span>
-                    <input v-model="taskName" type="text" class="col-lg-3 form-control">
-                    <span class="input-group-addon">table:</span>
-                    <input v-model="tableName" type="text" class="col-lg-9 form-control">
-                    <span class="input-group-btn">
-                        <button id="srcTableRefresh" class="btn btn-default" type="button">Go!</button>
-                    </span>
+            <datalist id="tableNameList">
+            </datalist>
+            <datalist id="t1NameList">
+            </datalist>
+            <datalist id="t2NameList">
+            </datalist>
+            <div id="vm" class="row">
+                <div class="col-lg-12">
+                    <div class="input-group">
+                        <span class="input-group-addon">任务名称</span>
+                        <input v-model="taskName" type="text" class="col-lg-1 form-control">
+                        <span class="input-group-addon">table:</span>
+                        <input v-model="tableName" type="text" class="col-lg-5 form-control" list="tableNameList">
+                        <span class="input-group-addon">left join</span>
+                        <input v-model="table2Name" type="text" class="col-lg-2 form-control" list="tableNameList">
+                        <span class="input-group-addon">on</span>
+                        <input v-model="t1Name" type="text" class="col-lg-2 form-control">
+                        <input v-model="t2Name" type="text" class="col-lg-2 form-control">
+                        <span class="input-group-btn">
+                            <button id="srcTableRefresh" class="btn btn-default" type="button">Go!</button>
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-12"><br></div>
+                <div class="col-lg-12"><br></div>
 
-            <div class="col-lg-6" style="padding: 0;">
-                <table class="table text-nowrap table-condensed table-hover table-bordered">
-                    <tbody id='table1'>
-                        {% for name,value in columns.items() %}
-                        <tr id={{'field'+name}}>
-                            <td>
-                                <div class="td-columns input-group input-group-sm">
-                                    <label title={{value}} class="form-control" for={{"input"+name}}>{{name}}</label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="td-columns input-group input-group-sm">
-                                    <!-- <span class="input-group-addon">test</span> -->
-                                    <input v-model={{name}} id={{'input'+name}} class="src-field-list form-control" type="text" list="itemlist">
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                <div class="col-lg-6" style="padding: 0;">
+                    <table class="table text-nowrap table-condensed table-hover table-bordered">
+                        <tbody id='table1'>
+                            {% for name,value in columns.items() %}
+                            <tr id={{'field'+name}}>
+                                <td>
+                                    <div class="td-columns input-group input-group-sm">
+                                        <label title={{value}} class="form-control" for={{"input"+name}}>{{name}}</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="td-columns input-group input-group-sm">
+                                        <!-- <span class="input-group-addon">test</span> -->
+                                        <input v-model={{name}} id={{'input'+name}} class="src-field-list form-control" type="text" list="t1NameList">
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
 
-            <div class="col-lg-6" style="padding: 0;">
-                <table class="table text-nowrap table-condensed table-hover table-bordered">
-                    <tbody id='table2'>
-                        {% for name in columns %}
-                        <tr>
-                            <td><div id={{'data0'+name}} class="td-data">null</div></td>
-                            <td><div id={{'data1'+name}} class="td-data">null</div></td>
-                            <td><div id={{'data2'+name}} class="td-data">null</div></td>
-                            <td><div id={{'data3'+name}} class="td-data">null</div></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class='col-12'>
-                <button v-on="click:click" class="form-control">确定</button>
+                <div class="col-lg-6" style="padding: 0;">
+                    <table class="table text-nowrap table-condensed table-hover table-bordered">
+                        <tbody id='table2'>
+                            {% for name in columns %}
+                            <tr>
+                                <td><div id={{'data0'+name}} class="td-data">null</div></td>
+                                <td><div id={{'data1'+name}} class="td-data">null</div></td>
+                                <td><div id={{'data2'+name}} class="td-data">null</div></td>
+                                <td><div id={{'data3'+name}} class="td-data">null</div></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class='col-12'>
+                    <button v-on="click:click" class="form-control">确定</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </body>
 </html>

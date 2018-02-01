@@ -16,10 +16,10 @@ class Config(object):
 
 
 class DevelopmentConfig(Config):
-    # DEBUG = True
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///data.db'
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///data.db'
     # SQLALCHEMY_DATABASE_URI = 'oracle://lyt:lyt@local:1521/xe'
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:password@local:3306/test?charset=utf8"
+    # SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:password@local:3306/test?charset=utf8"
 
 
 class ProductionConfig(Config):
