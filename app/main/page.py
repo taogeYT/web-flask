@@ -16,7 +16,7 @@ def login():
     return render_template('login.html')
 
 @page.route('/task/config', methods=['GET'])
-def index():
+def config():
     if g.__src__ is None or g.__dst__ is None:
         return redirect(url_for('page.login'))
     current_app.logger.warn("connecting...  %s" % g.__src__[0])
@@ -30,15 +30,15 @@ def index():
         user, name = g.__dst__[1], g.__dst__[2]
         db.dict_query("select * from %s where rownum <1" % tab_name)
         columns = get_comments(user, name, db)
-    return render_template('index.html', columns=columns, src_columns=comments)
+    return render_template('config.html', columns=columns, src_columns=comments)
 
 @page.route("/task/home", methods=["GET"])
 def task_home():
     return render_template('home.html')
 
-@page.route("/test", methods=["GET"])
+@page.route("/", methods=["GET"])
 def test():
-    return render_template('test.html')
+    return render_template('bp.html')
 
 @page.route("/db", methods=["GET"])
 def db_test():
